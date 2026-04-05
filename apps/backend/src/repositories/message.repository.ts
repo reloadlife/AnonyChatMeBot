@@ -27,4 +27,18 @@ export class MessageRepository {
   async markDelivered(id: number): Promise<void> {
     await this.db.update(messages).set({ delivered: true }).where(eq(messages.id, id))
   }
+
+  async setNotificationMessageId(id: number, notificationMessageId: number): Promise<void> {
+    await this.db
+      .update(messages)
+      .set({ notification_message_id: notificationMessageId })
+      .where(eq(messages.id, id))
+  }
+
+  async markRead(id: number): Promise<void> {
+    await this.db
+      .update(messages)
+      .set({ read_at: new Date().toISOString() })
+      .where(eq(messages.id, id))
+  }
 }

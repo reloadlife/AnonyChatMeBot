@@ -9,6 +9,7 @@ export const users = sqliteTable("users", {
     .notNull()
     .default("en"),
   onboarding_step: integer("onboarding_step").notNull().default(1),
+  receiving_messages: integer("receiving_messages", { mode: "boolean" }).notNull().default(true),
   created_at: text("created_at")
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
@@ -22,6 +23,35 @@ export const messages = sqliteTable("messages", {
     .references(() => users.id),
   content: text("content").notNull(),
   delivered: integer("delivered", { mode: "boolean" }).notNull().default(false),
+  // Telegram message ID of the "you have a new message" notification sent to recipient
+  notification_message_id: integer("notification_message_id"),
+  read_at: text("read_at"),
+  reply_to_id: integer("reply_to_id"), // self-referential: which message this replies to
+  created_at: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+})
+
+/** Tracks senders a user has blocked. Uses sender_telegram_id (not user ID) since senders are anonymous. */
+export const blocks = sqliteTable("blocks", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  blocker_user_id: integer("blocker_user_id")
+    .notNull()
+    .references(() => users.id),
+  sender_telegram_id: integer("sender_telegram_id").notNull(),
+  created_at: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+})
+
+export const reports = sqliteTable("reports", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  message_id: integer("message_id")
+    .notNull()
+    .references(() => messages.id),
+  reporter_user_id: integer("reporter_user_id")
+    .notNull()
+    .references(() => users.id),
   created_at: text("created_at")
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
@@ -33,3 +63,6 @@ export type NewUser = typeof users.$inferInsert
 
 export type MessageModel = typeof messages.$inferSelect
 export type NewMessage = typeof messages.$inferInsert
+
+export type BlockModel = typeof blocks.$inferSelect
+export type ReportModel = typeof reports.$inferSelect

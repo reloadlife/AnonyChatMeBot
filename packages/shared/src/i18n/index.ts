@@ -24,6 +24,21 @@ export interface I18nMessages {
     cannot_self_message: string
     inbox_header: string
     inbox_item: string
+    new_message_notification: string
+    message_read_receipt: string
+    reply_prompt: string
+    reply_sent: string
+    blocked: string
+    reported: string
+    not_accepting_messages: string
+    message_not_found: string
+    sender_blocked: string
+  }
+  actions: {
+    view: string
+    reply: string
+    block: string
+    report: string
   }
   onboarding: {
     select_locale: string
@@ -49,6 +64,9 @@ export interface I18nMessages {
     change_name: string
     name_updated: string
     language_updated: string
+    receiving_on: string
+    receiving_off: string
+    toggle_receiving: string
   }
   help: {
     text: string

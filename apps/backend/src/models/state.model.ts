@@ -15,6 +15,7 @@ export type BotState =
   | { name: "onboarding_name"; pendingRecipientId?: number }
   | { name: "asking_recipient" }
   | { name: "sending_message"; recipientId: number; recipientName: string }
+  | { name: "replying_to"; messageId: number; senderTelegramId: number; viewMessageId: number }
 
 export type StateName = BotState["name"]
 
@@ -28,6 +29,7 @@ export const TRANSITIONS: Readonly<Record<StateName, StateName[]>> = {
   onboarding_name: ["idle"],
   asking_recipient: ["sending_message", "idle"],
   sending_message: ["idle"],
+  replying_to: ["idle"],
 }
 
 /**
@@ -39,4 +41,5 @@ export const STATE_TTL: Readonly<Record<Exclude<StateName, "idle">, number>> = {
   onboarding_name: 24 * 60 * 60, // 24 h
   asking_recipient: 5 * 60, // 5 min — short window for recipient resolution
   sending_message: 60 * 60, // 1 h — abandon if user walks away mid-compose
+  replying_to: 60 * 60, // 1 h
 }

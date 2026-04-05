@@ -34,7 +34,9 @@ export class MessageController {
     const job: MessageJob = {
       messageId: message.id,
       recipientTelegramId,
+      recipientUserId,
       recipientLocale,
+      senderTelegramId,
       content,
     }
     await this.env.MESSAGE_QUEUE.send(job)

@@ -58,6 +58,29 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
       return
     }
 
+    // ── replying_to: deliver a reply to the original sender ─────────────────
+    if (state.name === "replying_to") {
+      const { senderTelegramId, viewMessageId } = state
+      const sender = await userRepo.findByTelegramId(senderTelegramId)
+
+      if (sender) {
+        const controller = new MessageController(env)
+        await controller.sendAnonymousMessage(
+          from.id,
+          sender.id,
+          sender.telegram_id,
+          sender.locale,
+          ctx.message.text,
+        )
+      }
+
+      await stateService.reset(from.id)
+      await ctx.reply(messages.bot.reply_sent, {
+        reply_parameters: { message_id: viewMessageId },
+      })
+      return
+    }
+
     // ── sending_message: deliver the anonymous message ──────────────────────
     if (state.name === "sending_message") {
       const recipient = await userRepo.findById(state.recipientId)

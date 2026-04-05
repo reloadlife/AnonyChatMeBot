@@ -45,6 +45,10 @@ export class UserRepository {
       .where(eq(users.id, id))
   }
 
+  async setReceivingMessages(id: number, receiving: boolean): Promise<void> {
+    await this.db.update(users).set({ receiving_messages: receiving }).where(eq(users.id, id))
+  }
+
   /** Step 2 complete: save display name, mark onboarding done. */
   async completeOnboarding(id: number, displayName: string): Promise<void> {
     await this.db

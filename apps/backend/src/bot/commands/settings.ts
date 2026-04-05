@@ -15,33 +15,54 @@ export function registerSettingsCommand(bot: Bot, env: Bindings) {
     const messages = getMessages((user?.locale as Locale) ?? "en")
 
     await ctx.reply(messages.settings.title, {
-      reply_markup: buildSettingsKeyboard(messages),
+      reply_markup: buildSettingsKeyboard(messages, user?.receiving_messages ?? true),
     })
   }
 
   bot.hears(allTexts("settings"), handle)
   bot.command("settings", handle)
 
-  // Change language: show the locale selector (locale callback in onboarding.ts handles the pick)
+  // Change language
   bot.callbackQuery("settings:lang", async (ctx) => {
     await ctx.answerCallbackQuery()
-    await ctx.reply(getMessages("en").onboarding.select_locale, {
+    const user = await new UserRepository(createDb(env.DB)).findByTelegramId(ctx.from.id)
+    const messages = getMessages((user?.locale as Locale) ?? "en")
+    await ctx.reply(messages.onboarding.select_locale, {
       reply_markup: buildLocaleSelector(),
     })
   })
 
-  // Change display name: set onboarding_name state, show name keyboard
+  // Change display name
   bot.callbackQuery("settings:name", async (ctx) => {
     if (!ctx.from) return ctx.answerCallbackQuery()
     const db = createDb(env.DB)
     const user = await new UserRepository(db).findByTelegramId(ctx.from.id)
     const messages = getMessages((user?.locale as Locale) ?? "en")
 
-    // Use set() (bypass FSM validation) so idle can directly enter onboarding_name
     await new StateService(env.STATE_KV).set(ctx.from.id, { name: "onboarding_name" })
     await ctx.answerCallbackQuery()
     await ctx.reply(messages.onboarding.enter_name, {
       reply_markup: buildNameRequestKeyboard(ctx.from.first_name || "..."),
+    })
+  })
+
+  // Toggle receiving messages on/off
+  bot.callbackQuery("settings:toggle_receiving", async (ctx) => {
+    if (!ctx.from) return ctx.answerCallbackQuery()
+    const db = createDb(env.DB)
+    const userRepo = new UserRepository(db)
+    const user = await userRepo.findByTelegramId(ctx.from.id)
+    if (!user) return ctx.answerCallbackQuery()
+
+    const newValue = !user.receiving_messages
+    await userRepo.setReceivingMessages(user.id, newValue)
+
+    const messages = getMessages((user.locale as Locale) ?? "en")
+    const status = newValue ? messages.settings.receiving_on : messages.settings.receiving_off
+
+    await ctx.answerCallbackQuery({ text: status, show_alert: true })
+    await ctx.editMessageReplyMarkup({
+      reply_markup: buildSettingsKeyboard(messages, newValue),
     })
   })
 }

@@ -13,6 +13,15 @@ bot:
   cannot_self_message: "❌ لا يمكنك إرسال رسالة مجهولة لنفسك."
   inbox_header: "📬 الرسائل — صفحة {page} من {total}:"
   inbox_item: "#{n}  {content}\n🕐 {ago}"
+  new_message_notification: "📩 لديك رسالة مجهولة جديدة!"
+  message_read_receipt: "👀 تمت قراءة رسالتك."
+  reply_prompt: "↩️ اكتب ردك:"
+  reply_sent: "✅ تم إرسال الرد!"
+  blocked: "🚫 تم حظر المرسل."
+  reported: "🚩 تم الإبلاغ عن الرسالة. شكراً."
+  not_accepting_messages: "❌ هذا الشخص لا يستقبل الرسائل حالياً."
+  message_not_found: "❌ الرسالة غير موجودة."
+  sender_blocked: "❌ قام هذا المستخدم بحظرك."
 
 onboarding:
   select_locale: "👋 مرحباً! يرجى اختيار لغتك:"
@@ -32,12 +41,21 @@ commands:
   settings: "تغيير اللغة والاسم"
   help: "المساعدة والأسئلة الشائعة"
 
+actions:
+  view: "📖 عرض الرسالة"
+  reply: "↩️ رد"
+  block: "🚫 حظر"
+  report: "🚩 إبلاغ"
+
 settings:
   title: "⚙️ الإعدادات"
   change_language: "🌐 تغيير اللغة"
   change_name: "✏️ تغيير الاسم المعروض"
   name_updated: "✅ تم تحديث الاسم إلى {name}!"
   language_updated: "✅ تم تغيير اللغة!"
+  receiving_on: "✅ استقبال الرسائل مفعّل"
+  receiving_off: "⏸️ استقبال الرسائل موقوف"
+  toggle_receiving: "📩 تفعيل/إيقاف الرسائل"
 
 help:
   text: |

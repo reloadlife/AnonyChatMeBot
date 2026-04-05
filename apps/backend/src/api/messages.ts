@@ -39,7 +39,9 @@ messagesRouter.post("/send", async (c) => {
   await c.env.MESSAGE_QUEUE.send({
     messageId: message.id,
     recipientTelegramId: recipient.telegram_id,
+    recipientUserId: recipient.id,
     recipientLocale: recipient.locale,
+    senderTelegramId: body.senderTelegramId,
     content: body.content.trim(),
   })
 

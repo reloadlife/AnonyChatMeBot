@@ -13,6 +13,15 @@ bot:
   cannot_self_message: "❌ Нельзя отправить анонимное сообщение самому себе."
   inbox_header: "📬 Сообщения — страница {page} из {total}:"
   inbox_item: "#{n}  {content}\n🕐 {ago}"
+  new_message_notification: "📩 У вас новое анонимное сообщение!"
+  message_read_receipt: "👀 Ваше сообщение прочитано."
+  reply_prompt: "↩️ Введите ответ:"
+  reply_sent: "✅ Ответ отправлен!"
+  blocked: "🚫 Отправитель заблокирован."
+  reported: "🚩 Сообщение отмечено. Спасибо."
+  not_accepting_messages: "❌ Этот пользователь сейчас не принимает сообщения."
+  message_not_found: "❌ Сообщение не найдено."
+  sender_blocked: "❌ Этот пользователь вас заблокировал."
 
 onboarding:
   select_locale: "👋 Добро пожаловать! Пожалуйста, выберите язык:"
@@ -32,12 +41,21 @@ commands:
   settings: "Изменить язык и имя"
   help: "Помощь и FAQ"
 
+actions:
+  view: "📖 Посмотреть"
+  reply: "↩️ Ответить"
+  block: "🚫 Заблокировать"
+  report: "🚩 Пожаловаться"
+
 settings:
   title: "⚙️ Настройки"
   change_language: "🌐 Изменить язык"
   change_name: "✏️ Изменить имя"
   name_updated: "✅ Имя обновлено на {name}!"
   language_updated: "✅ Язык изменён!"
+  receiving_on: "✅ Приём сообщений включён"
+  receiving_off: "⏸️ Приём сообщений приостановлен"
+  toggle_receiving: "📩 Приём сообщений"
 
 help:
   text: |

@@ -5,6 +5,7 @@ import { registerLinkCommand } from "~/bot/commands/link"
 import { registerSendCommand } from "~/bot/commands/send"
 import { registerSettingsCommand } from "~/bot/commands/settings"
 import { registerStartCommand } from "~/bot/commands/start"
+import { registerMessageActionsHandler } from "~/bot/handlers/message-actions.handler"
 import { registerOnboardingHandlers } from "~/bot/handlers/onboarding"
 import type { Bindings } from "~/index"
 import { registerMessageHandler } from "~/views/telegram/message.handler"
@@ -29,6 +30,7 @@ function buildBot(token: string, env: Bindings): Bot {
   registerInboxCommand(bot, env)
   registerSettingsCommand(bot, env)
   registerHelpCommand(bot, env)
+  registerMessageActionsHandler(bot, env)
   registerMessageHandler(bot, env)
 
   return bot

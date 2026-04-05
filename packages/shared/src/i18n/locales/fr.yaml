@@ -13,6 +13,15 @@ bot:
   cannot_self_message: "❌ Vous ne pouvez pas vous envoyer un message anonyme."
   inbox_header: "📬 Messages — page {page} sur {total} :"
   inbox_item: "#{n}  {content}\n🕐 {ago}"
+  new_message_notification: "📩 Vous avez un nouveau message anonyme !"
+  message_read_receipt: "👀 Votre message a été lu."
+  reply_prompt: "↩️ Tapez votre réponse :"
+  reply_sent: "✅ Réponse envoyée !"
+  blocked: "🚫 Expéditeur bloqué."
+  reported: "🚩 Message signalé. Merci."
+  not_accepting_messages: "❌ Cette personne n'accepte pas de messages pour l'instant."
+  message_not_found: "❌ Message introuvable."
+  sender_blocked: "❌ Cet utilisateur vous a bloqué."
 
 onboarding:
   select_locale: "👋 Bienvenue ! Veuillez choisir votre langue :"
@@ -32,12 +41,21 @@ commands:
   settings: "Changer de langue et de nom"
   help: "Aide et FAQ"
 
+actions:
+  view: "📖 Voir le message"
+  reply: "↩️ Répondre"
+  block: "🚫 Bloquer"
+  report: "🚩 Signaler"
+
 settings:
   title: "⚙️ Paramètres"
   change_language: "🌐 Changer de langue"
   change_name: "✏️ Changer le nom affiché"
   name_updated: "✅ Nom mis à jour en {name} !"
   language_updated: "✅ Langue modifiée !"
+  receiving_on: "✅ Messages activés"
+  receiving_off: "⏸️ Messages en pause"
+  toggle_receiving: "📩 Activer/désactiver les messages"
 
 help:
   text: |

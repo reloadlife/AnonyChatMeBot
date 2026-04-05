@@ -15,6 +15,13 @@
       "when": 1775397175874,
       "tag": "0001_volatile_sway",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1775408697682,
+      "tag": "0002_daffy_chimera",
+      "breakpoints": true
     }
   ]
 }
