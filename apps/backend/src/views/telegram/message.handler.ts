@@ -34,18 +34,18 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
       const recipientId = decodeId(env.LINK_SALT, hash)
 
       if (recipientId === null) {
-        await ctx.reply(messages.bot.invalid_link)
+        await ctx.reply(messages.bot.invalid_link, { parse_mode: "MarkdownV2" })
         return
       }
 
       const recipient = await userRepo.findById(recipientId)
       if (!recipient) {
-        await ctx.reply(messages.errors.user_not_found)
+        await ctx.reply(messages.errors.user_not_found, { parse_mode: "MarkdownV2" })
         return
       }
 
       if (recipient.id === user?.id) {
-        await ctx.reply(messages.bot.cannot_self_message)
+        await ctx.reply(messages.bot.cannot_self_message, { parse_mode: "MarkdownV2" })
         return
       }
 
@@ -54,7 +54,7 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
         recipientId: recipient.id,
         recipientName: recipient.display_name || recipient.username || "someone",
       })
-      await ctx.reply(messages.bot.sending_to)
+      await ctx.reply(messages.bot.sending_to, { parse_mode: "MarkdownV2" })
       return
     }
 
@@ -76,6 +76,7 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
 
       await stateService.reset(from.id)
       await ctx.reply(messages.bot.reply_sent, {
+        parse_mode: "MarkdownV2",
         reply_parameters: { message_id: viewMessageId },
       })
       return
@@ -86,7 +87,7 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
       const recipient = await userRepo.findById(state.recipientId)
       if (!recipient) {
         await stateService.reset(from.id)
-        await ctx.reply(messages.errors.user_not_found)
+        await ctx.reply(messages.errors.user_not_found, { parse_mode: "MarkdownV2" })
         return
       }
 
@@ -100,7 +101,7 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
       )
 
       await stateService.reset(from.id)
-      await ctx.reply(messages.bot.message_sent)
+      await ctx.reply(messages.bot.message_sent, { parse_mode: "MarkdownV2" })
       return
     }
 

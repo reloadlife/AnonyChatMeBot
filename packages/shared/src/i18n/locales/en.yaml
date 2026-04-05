@@ -1,45 +1,61 @@
 bot:
-  welcome: "🎉 You're all set, {name}! Welcome to AnonyChatMe."
-  welcome_back: "👋 Welcome back, {name}!"
-  your_link: "🔗 Your anonymous link:"
-  link_hint: "Share this link so people can send you anonymous messages."
-  send_message_prompt: "✍️ Type your anonymous message below:"
-  message_sent: "✅ Your message was sent anonymously!"
-  message_received: "📩 You received a new anonymous message:"
-  no_messages: "📭 No messages yet."
-  sending_to: "📨 Sending an anonymous message. Type it below:"
-  ask_recipient: "🔗 Paste the person's link (e.g. t.me/...?start=...):"
-  invalid_link: "❌ Invalid link. Please try again."
-  cannot_self_message: "❌ You can't send an anonymous message to yourself."
-  inbox_header: "📬 Messages — page {page} of {total}:"
-  inbox_item: "#{n}  {content}\n🕐 {ago}"
-  new_message_notification: "📩 You have a new anonymous message!"
-  message_read_receipt: "👀 Your message was read."
-  reply_prompt: "↩️ Type your reply:"
-  reply_sent: "✅ Reply sent!"
+  welcome: "🎉 *You're all set, {name}\\!*\nWelcome to *AnonyChatMe* \\— your anonymous messaging bot\\."
+  welcome_back: "👋 Welcome back, *{name}*\\!"
+  your_link: "🔗 *Your anonymous link:*"
+  link_hint: "Share this link so anyone can send you anonymous messages\\.\nYour identity is never revealed\\."
+  send_message_prompt: "✍️ *Type your anonymous message below:*"
+  message_sent: "✅ *Sent\\!* Your message was delivered anonymously\\."
+  message_received: "📩 You have a *new anonymous message\\!*"
+  no_messages: "📭 *Your inbox is empty\\.* No messages yet\\."
+  sending_to: "📨 *Ready to send\\.* Type your anonymous message below:"
+  ask_recipient: "🔗 Paste the person's anonymous link below:"
+  invalid_link: "❌ *Invalid link\\.* Please check it and try again\\."
+  cannot_self_message: "❌ You can't send an anonymous message to yourself\\."
+  inbox_header: "📬 *Inbox* — page {page} of {total}"
+  inbox_item: "\\#{n}  {content}\n🕐 {ago}"
+  new_message_notification: "📩 *New anonymous message\\!*\n\nTap *View message* to read it\\."
+  message_read_receipt: "👀 Your message has been *read*\\."
+  reply_prompt: "↩️ *Type your reply* below:"
+  reply_sent: "✅ *Reply sent\\!*"
+  # Plain text — used in answerCallbackQuery toast (no parse_mode)
   blocked: "🚫 Sender blocked."
-  reported: "🚩 Message reported. Thank you."
-  not_accepting_messages: "❌ This person is not accepting messages right now."
-  message_not_found: "❌ Message not found."
-  sender_blocked: "❌ You have been blocked by this user."
+  reported: "🚩 Reported. Thanks!"
+  not_accepting_messages: "❌ *Not accepting messages\\.* This person has paused their inbox\\."
+  message_not_found: "❌ Message not found\\."
+  sender_blocked: "❌ This user has blocked you\\."
+  cancel: "✅ *Cancelled\\.* What would you like to do?"
+  nothing_to_cancel: "🤷 You're not in the middle of anything\\."
+  inbox_unread: "{n} unread"
+  rate_limited: "⏳ *Slow down\\!* Please wait a moment before sending another message\\."
+  message_too_long: "❌ *Message too long* \\— max *{max}* characters\\."
 
 onboarding:
-  select_locale: "👋 Welcome! Please choose your language:"
-  enter_name: "✏️ What should I call you?\n\nTap your name below or type a custom one:"
+  select_locale: "👋 *Welcome to AnonyChatMe\\!*\nPlease choose your language:"
+  enter_name: "✏️ *What should I call you?*\n\nTap your name below or type a custom one:"
 
 menu:
-  receive_messages: "📩 I want to receive messages"
-  send_direct: "📤 Send direct message"
-  received: "📬 Received messages"
+  receive_messages: "📩 My anonymous link"
+  send_direct: "📤 Send a message"
+  received: "📬 Inbox"
   settings: "⚙️ Settings"
   help: "❓ Help"
 
 commands:
   link: "Get your anonymous link to share"
-  send: "Send an anonymous message to someone"
+  send: "Send an anonymous message"
   inbox: "View your received messages"
   settings: "Change language and display name"
   help: "Help and FAQ"
+  cancel: "Cancel the current action"
+
+inbox:
+  prev: "◀ Prev"
+  next: "Next ▶"
+  view_n: "View #{n}"
+  time_just_now: "just now"
+  time_minutes_ago: "{n}m ago"
+  time_hours_ago: "{n}h ago"
+  time_days_ago: "{n}d ago"
 
 actions:
   view: "📖 View message"
@@ -48,35 +64,45 @@ actions:
   report: "🚩 Report"
 
 settings:
-  title: "⚙️ Settings"
-  change_language: "🌐 Change language"
-  change_name: "✏️ Change display name"
+  title: "⚙️ *Settings*"
+  change_language: "🌐 Language"
+  change_name: "✏️ Display name"
+  # Plain text — used in answerCallbackQuery toast
   name_updated: "✅ Display name updated to {name}!"
-  language_updated: "✅ Language changed!"
-  receiving_on: "✅ Now accepting messages"
+  language_updated: "✅ Language updated!"
+  receiving_on: "✅ Accepting messages"
   receiving_off: "⏸️ Messages paused"
   toggle_receiving: "📩 Toggle messages"
+  blocked_senders: "🚫 Blocked \\({n}\\)"
+  no_blocked: "📭 *No blocked senders\\.* You haven't blocked anyone\\."
+  unblocked: "✅ Unblocked."
 
 help:
   text: |
     *❓ Help & FAQ*
 
     *What is AnonyChatMe?*
-    A bot that lets people send you anonymous messages — they never see your identity, and you never see theirs.
+    A bot that lets anyone send you anonymous messages — neither of you ever sees the other's identity\.
 
     *How do I receive messages?*
-    Tap 📩 *I want to receive messages* or use /link to get your personal link. Share it anywhere.
+    Tap 📩 *My anonymous link* or use /link to get your personal link\. Share it anywhere \\— social media, bio, wherever\.
 
     *How do I send a message?*
-    Tap 📤 *Send direct message* or use /send and paste someone's link. Then type your message.
+    Tap 📤 *Send a message* or use /send, then paste someone's link\. Type your message and it's delivered anonymously\.
 
     *Are messages truly anonymous?*
-    Yes. The sender's identity is never revealed to you, and yours is never revealed to them.
+    Yes\. The sender's Telegram identity is never revealed to the recipient, and vice versa\.
+
+    *Can I reply to a message I received?*
+    Yes\. Open the message with 📖 *View message* and tap ↩️ *Reply*\. Your reply is also anonymous\.
+
+    *Can I stop receiving messages?*
+    Yes — go to ⚙️ *Settings* and toggle off message receiving\.
 
     *Can I change my name or language?*
-    Yes — tap ⚙️ *Settings*.
+    Yes — tap ⚙️ *Settings*\.
 
 errors:
-  generic: "❌ Something went wrong. Please try again."
-  not_found: "❌ Not found."
-  user_not_found: "❌ This link is invalid or the user no longer exists."
+  generic: "❌ *Something went wrong\\.* Please try again\\."
+  not_found: "❌ Not found\\."
+  user_not_found: "❌ This link is *invalid* or the user no longer exists\\."

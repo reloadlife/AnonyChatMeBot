@@ -1,36 +1,42 @@
 bot:
-  welcome: "🎉 Tout est prêt, {name} ! Bienvenue sur AnonyChatMe."
-  welcome_back: "👋 Bon retour, {name} !"
-  your_link: "🔗 Votre lien anonyme :"
-  link_hint: "Partagez ce lien pour recevoir des messages anonymes."
-  send_message_prompt: "✍️ Tapez votre message anonyme :"
-  message_sent: "✅ Votre message a été envoyé anonymement !"
-  message_received: "📩 Vous avez reçu un nouveau message anonyme :"
-  no_messages: "📭 Pas encore de messages."
-  sending_to: "📨 Envoi d'un message anonyme. Tapez-le ci-dessous :"
-  ask_recipient: "🔗 Collez le lien de la personne (ex. t.me/...?start=...) :"
-  invalid_link: "❌ Lien invalide. Veuillez réessayer."
-  cannot_self_message: "❌ Vous ne pouvez pas vous envoyer un message anonyme."
-  inbox_header: "📬 Messages — page {page} sur {total} :"
-  inbox_item: "#{n}  {content}\n🕐 {ago}"
-  new_message_notification: "📩 Vous avez un nouveau message anonyme !"
-  message_read_receipt: "👀 Votre message a été lu."
-  reply_prompt: "↩️ Tapez votre réponse :"
-  reply_sent: "✅ Réponse envoyée !"
+  welcome: "🎉 *Tout est prêt, {name}\\!*\nBienvenue sur *AnonyChatMe* \\— ton bot de messagerie anonyme\\."
+  welcome_back: "👋 Bon retour, *{name}*\\!"
+  your_link: "🔗 *Votre lien anonyme :*"
+  link_hint: "Partagez ce lien pour que n'importe qui puisse vous envoyer des messages anonymes\\.\nVotre identité ne sera jamais révélée\\."
+  send_message_prompt: "✍️ *Tapez votre message anonyme ci-dessous :*"
+  message_sent: "✅ *Envoyé\\!* Votre message a été livré anonymement\\."
+  message_received: "📩 Vous avez un *nouveau message anonyme\\!*"
+  no_messages: "📭 *Votre boîte de réception est vide\\.* Aucun message pour l'instant\\."
+  sending_to: "📨 *Prêt à envoyer\\.* Tapez votre message anonyme :"
+  ask_recipient: "🔗 Collez le lien anonyme de la personne ci-dessous :"
+  invalid_link: "❌ *Lien invalide\\.* Vérifiez-le et réessayez\\."
+  cannot_self_message: "❌ Vous ne pouvez pas vous envoyer un message anonyme\\."
+  inbox_header: "📬 *Boîte de réception* — page {page} sur {total}"
+  inbox_item: "\\#{n}  {content}\n🕐 {ago}"
+  new_message_notification: "📩 *Nouveau message anonyme\\!*\n\nAppuyez sur *Lire le message* pour l'ouvrir\\."
+  message_read_receipt: "👀 Votre message a été *lu*\\."
+  reply_prompt: "↩️ *Tapez votre réponse* ci-dessous :"
+  reply_sent: "✅ *Réponse envoyée\\!*"
+  # Texte brut — pour les notifications toast (sans parse_mode)
   blocked: "🚫 Expéditeur bloqué."
-  reported: "🚩 Message signalé. Merci."
-  not_accepting_messages: "❌ Cette personne n'accepte pas de messages pour l'instant."
-  message_not_found: "❌ Message introuvable."
-  sender_blocked: "❌ Cet utilisateur vous a bloqué."
+  reported: "🚩 Signalé. Merci !"
+  not_accepting_messages: "❌ *Messages désactivés\\.* Cette personne a mis sa boîte en pause\\."
+  message_not_found: "❌ Message introuvable\\."
+  sender_blocked: "❌ Cet utilisateur vous a bloqué\\."
+  cancel: "✅ *Annulé\\.* Que souhaitez-vous faire ?"
+  nothing_to_cancel: "🤷 Rien n'est en cours pour l'instant\\."
+  inbox_unread: "{n} non lu\\(s\\)"
+  rate_limited: "⏳ *Doucement\\!* Patientez un instant avant d'envoyer un autre message\\."
+  message_too_long: "❌ *Message trop long* \\— maximum *{max}* caractères\\."
 
 onboarding:
-  select_locale: "👋 Bienvenue ! Veuillez choisir votre langue :"
-  enter_name: "✏️ Comment dois-je vous appeler ?\n\nAppuyez sur votre nom ci-dessous ou tapez-en un autre :"
+  select_locale: "👋 *Bienvenue sur AnonyChatMe\\!*\nVeuillez choisir votre langue :"
+  enter_name: "✏️ *Comment dois-je vous appeler ?*\n\nAppuyez sur votre nom ou tapez-en un autre :"
 
 menu:
-  receive_messages: "📩 Recevoir des messages"
-  send_direct: "📤 Envoyer un message direct"
-  received: "📬 Messages reçus"
+  receive_messages: "📩 Mon lien anonyme"
+  send_direct: "📤 Envoyer un message"
+  received: "📬 Boîte de réception"
   settings: "⚙️ Paramètres"
   help: "❓ Aide"
 
@@ -40,43 +46,63 @@ commands:
   inbox: "Voir vos messages reçus"
   settings: "Changer de langue et de nom"
   help: "Aide et FAQ"
+  cancel: "Annuler l'action en cours"
+
+inbox:
+  prev: "◀ Précédent"
+  next: "Suivant ▶"
+  view_n: "Lire #{n}"
+  time_just_now: "à l'instant"
+  time_minutes_ago: "il y a {n} min"
+  time_hours_ago: "il y a {n}h"
+  time_days_ago: "il y a {n}j"
 
 actions:
-  view: "📖 Voir le message"
+  view: "📖 Lire le message"
   reply: "↩️ Répondre"
   block: "🚫 Bloquer"
   report: "🚩 Signaler"
 
 settings:
-  title: "⚙️ Paramètres"
-  change_language: "🌐 Changer de langue"
-  change_name: "✏️ Changer le nom affiché"
-  name_updated: "✅ Nom mis à jour en {name} !"
+  title: "⚙️ *Paramètres*"
+  change_language: "🌐 Langue"
+  change_name: "✏️ Nom affiché"
+  # Texte brut — pour les notifications toast
+  name_updated: "✅ Nom mis à jour : {name} !"
   language_updated: "✅ Langue modifiée !"
   receiving_on: "✅ Messages activés"
   receiving_off: "⏸️ Messages en pause"
-  toggle_receiving: "📩 Activer/désactiver les messages"
+  toggle_receiving: "📩 Activer/désactiver"
+  blocked_senders: "🚫 Bloqués \\({n}\\)"
+  no_blocked: "📭 *Aucun expéditeur bloqué\\.* Vous n'avez bloqué personne\\."
+  unblocked: "✅ Débloqué."
 
 help:
   text: |
     *❓ Aide & FAQ*
 
     *Qu'est-ce qu'AnonyChatMe ?*
-    Un bot qui permet de recevoir des messages anonymes — l'expéditeur reste toujours anonyme.
+    Un bot de messagerie anonyme \\— ni vous ni l'expéditeur ne voyez l'identité de l'autre\.
 
     *Comment recevoir des messages ?*
-    Appuyez sur 📩 *Recevoir des messages* ou utilisez /link pour obtenir votre lien. Partagez-le.
+    Appuyez sur 📩 *Mon lien anonyme* ou utilisez /link\. Partagez le lien partout\.
 
     *Comment envoyer un message ?*
-    Appuyez sur 📤 *Envoyer un message direct* ou /send et collez le lien de la personne.
+    Appuyez sur 📤 *Envoyer un message* ou /send, puis collez le lien de la personne\.
 
     *Les messages sont-ils vraiment anonymes ?*
-    Oui. L'identité de l'expéditeur n'est jamais révélée.
+    Oui\. L'identité de l'expéditeur n'est jamais révélée au destinataire, et vice versa\.
+
+    *Puis-je répondre à un message reçu ?*
+    Oui\. Ouvrez le message et appuyez sur ↩️ *Répondre*\. La réponse est aussi anonyme\.
+
+    *Comment arrêter de recevoir des messages ?*
+    Allez dans ⚙️ *Paramètres* et désactivez la réception des messages\.
 
     *Puis-je changer mon nom ou ma langue ?*
-    Oui — appuyez sur ⚙️ *Paramètres*.
+    Oui \\— appuyez sur ⚙️ *Paramètres*\.
 
 errors:
-  generic: "❌ Une erreur s'est produite. Veuillez réessayer."
-  not_found: "❌ Non trouvé."
-  user_not_found: "❌ Ce lien est invalide ou l'utilisateur n'existe plus."
+  generic: "❌ *Une erreur s'est produite\\.* Veuillez réessayer\\."
+  not_found: "❌ Non trouvé\\."
+  user_not_found: "❌ Ce lien est *invalide* ou l'utilisateur n'existe plus\\."

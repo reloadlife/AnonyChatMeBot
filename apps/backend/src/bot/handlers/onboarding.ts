@@ -1,4 +1,4 @@
-import { getMessages, type Locale, t } from "@anonychatmebot/shared"
+import { escapeMarkdownV2, getMessages, type Locale, t } from "@anonychatmebot/shared"
 import type { Bot } from "grammy"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
@@ -25,13 +25,9 @@ export function registerOnboardingHandlers(bot: Bot, env: Bindings) {
     await ctx.editMessageText(`${chosen?.flag ?? ""} ${chosen?.label ?? locale} ✅`)
 
     if (user.onboarding_step === 0) {
-      // Settings context: just update locale, return to main menu
       await userRepo.updateLocale(user.id, locale)
-      await ctx.reply(messages.settings.language_updated, {
-        reply_markup: buildMainMenuKeyboard(messages),
-      })
+      await ctx.reply(messages.settings.language_updated)
     } else {
-      // Onboarding context: persist locale + advance to name step, carrying pendingRecipientId
       const currentState = await stateService.get(ctx.from.id, user)
       const pendingRecipientId =
         currentState.name === "onboarding_locale" ? currentState.pendingRecipientId : undefined
@@ -39,13 +35,12 @@ export function registerOnboardingHandlers(bot: Bot, env: Bindings) {
       await userRepo.setLocale(user.id, locale)
       await stateService.set(ctx.from.id, { name: "onboarding_name", pendingRecipientId })
       await ctx.reply(messages.onboarding.enter_name, {
+        parse_mode: "MarkdownV2",
         reply_markup: buildNameRequestKeyboard(ctx.from.first_name || ctx.from.username || "..."),
       })
     }
   })
 
-  // Step 2 → idle: user sends their chosen display name
-  // Calls next() when not in onboarding_name state so other handlers can take over.
   bot.on("message:text", async (ctx, next) => {
     const db = createDb(env.DB)
     const userRepo = new UserRepository(db)
@@ -62,8 +57,8 @@ export function registerOnboardingHandlers(bot: Bot, env: Bindings) {
     await userRepo.completeOnboarding(user.id, displayName)
 
     const messages = getMessages((user.locale ?? "en") as Locale)
+    const escapedName = escapeMarkdownV2(displayName)
 
-    // If the user arrived via a deep link, redirect straight to the send flow
     if (pendingRecipientId !== undefined) {
       const recipient = await userRepo.findById(pendingRecipientId)
       if (recipient) {
@@ -72,16 +67,18 @@ export function registerOnboardingHandlers(bot: Bot, env: Bindings) {
           recipientId: recipient.id,
           recipientName: recipient.display_name || recipient.username || "someone",
         })
-        await ctx.reply(t(messages.bot.welcome, { name: displayName }), {
+        await ctx.reply(t(messages.bot.welcome, { name: escapedName }), {
+          parse_mode: "MarkdownV2",
           reply_markup: buildMainMenuKeyboard(messages),
         })
-        await ctx.reply(messages.bot.sending_to)
+        await ctx.reply(messages.bot.sending_to, { parse_mode: "MarkdownV2" })
         return
       }
     }
 
     await stateService.reset(ctx.from.id)
-    await ctx.reply(t(messages.bot.welcome, { name: displayName }), {
+    await ctx.reply(t(messages.bot.welcome, { name: escapedName }), {
+      parse_mode: "MarkdownV2",
       reply_markup: buildMainMenuKeyboard(messages),
     })
   })

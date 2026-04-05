@@ -33,6 +33,11 @@ export interface I18nMessages {
     not_accepting_messages: string
     message_not_found: string
     sender_blocked: string
+    cancel: string
+    nothing_to_cancel: string
+    inbox_unread: string
+    rate_limited: string
+    message_too_long: string
   }
   actions: {
     view: string
@@ -57,6 +62,16 @@ export interface I18nMessages {
     inbox: string
     settings: string
     help: string
+    cancel: string
+  }
+  inbox: {
+    prev: string
+    next: string
+    view_n: string
+    time_just_now: string
+    time_minutes_ago: string
+    time_hours_ago: string
+    time_days_ago: string
   }
   settings: {
     title: string
@@ -67,6 +82,9 @@ export interface I18nMessages {
     receiving_on: string
     receiving_off: string
     toggle_receiving: string
+    blocked_senders: string
+    no_blocked: string
+    unblocked: string
   }
   help: {
     text: string
@@ -78,14 +96,20 @@ export interface I18nMessages {
   }
 }
 
-// Parsed once at module init — no runtime filesystem access, safe in Workers
+// Wrangler (Workers) imports YAML as raw text strings via [[rules]] type="Text".
+// Bun imports YAML as pre-parsed JS objects. Handle both runtimes.
+function parseLocale(raw: unknown): I18nMessages {
+  if (typeof raw === "string") return yaml.load(raw) as I18nMessages
+  return raw as I18nMessages
+}
+
 const messages: Record<Locale, I18nMessages> = {
-  en: yaml.load(enRaw) as I18nMessages,
-  fa: yaml.load(faRaw) as I18nMessages,
-  ru: yaml.load(ruRaw) as I18nMessages,
-  de: yaml.load(deRaw) as I18nMessages,
-  fr: yaml.load(frRaw) as I18nMessages,
-  ar: yaml.load(arRaw) as I18nMessages,
+  en: parseLocale(enRaw),
+  fa: parseLocale(faRaw),
+  ru: parseLocale(ruRaw),
+  de: parseLocale(deRaw),
+  fr: parseLocale(frRaw),
+  ar: parseLocale(arRaw),
 }
 
 export function getMessages(locale: Locale = "en"): I18nMessages {
@@ -95,6 +119,14 @@ export function getMessages(locale: Locale = "en"): I18nMessages {
 /** Replace {name} style placeholders in a translation string. */
 export function t(template: string, vars: Record<string, string>): string {
   return template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? `{${key}}`)
+}
+
+/**
+ * Escapes all MarkdownV2 special characters in a plain-text string.
+ * Use this before inserting any user-provided content into a MarkdownV2 template.
+ */
+export function escapeMarkdownV2(text: string): string {
+  return text.replace(/[_*[\]()~`>#+=|{}.!\-\\]/g, "\\$&")
 }
 
 /** Map Telegram language_code to a supported Locale. */

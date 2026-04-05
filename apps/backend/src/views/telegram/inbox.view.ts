@@ -13,11 +13,12 @@ export function relativeTime(isoString: string): string {
 }
 
 /**
- * Format a single inbox item line.
+ * Format a single inbox item line for MarkdownV2.
+ * content must already be escaped by the caller via escapeMarkdownV2().
  * Template: "#{n}  {content}\n🕐 {ago}"
  */
 export function formatMessageItem(n: number, content: string, createdAt: string): string {
-  return `#${n}  ${content}\n🕐 ${relativeTime(createdAt)}`
+  return `\`#${n}\`  ${content}\n🕐 _${relativeTime(createdAt)}_`
 }
 
 /**

@@ -1,4 +1,4 @@
-import { getMessages, type Locale, resolveLocale, t } from "@anonychatmebot/shared"
+import { escapeMarkdownV2, getMessages, type Locale, resolveLocale, t } from "@anonychatmebot/shared"
 import type { Bot } from "grammy"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
@@ -25,15 +25,22 @@ export function registerStartCommand(bot: Bot, env: Bindings) {
 
     // Decode deep-link payload early so it can be threaded through onboarding
     const payload = ctx.match?.trim()
-    const pendingRecipientId = payload ? (decodeId(env.LINK_SALT, payload) ?? undefined) : undefined
+    const decodedId = payload ? decodeId(env.LINK_SALT, payload) : null
+    // Invalid hash — tell user immediately (before onboarding check so new users also see it)
+    if (payload && decodedId === null) {
+      const msgs = getMessages(resolveLocale(from.language_code))
+      await ctx.reply(msgs.bot.invalid_link, { parse_mode: "MarkdownV2" })
+      // Still proceed to show onboarding/menu below
+    }
+    const pendingRecipientId = decodedId ?? undefined
 
     if (state.name === "onboarding_locale") {
       const messages = getMessages(resolveLocale(from.language_code))
-      // Carry the pending recipient through so onboarding can redirect after completion
       if (pendingRecipientId) {
         await stateService.set(from.id, { name: "onboarding_locale", pendingRecipientId })
       }
       await ctx.reply(messages.onboarding.select_locale, {
+        parse_mode: "MarkdownV2",
         reply_markup: buildLocaleSelector(),
       })
       return
@@ -42,34 +49,37 @@ export function registerStartCommand(bot: Bot, env: Bindings) {
     if (state.name === "onboarding_name") {
       const messages = getMessages(user.locale as Locale)
       await ctx.reply(messages.onboarding.enter_name, {
+        parse_mode: "MarkdownV2",
         reply_markup: buildNameRequestKeyboard(from.first_name || from.username || "..."),
       })
       return
     }
 
-    // state === "idle" or any active state — re-anchor via the payload or show menu
     const messages = getMessages(user.locale as Locale)
 
-    // Deep-link: decode and immediately start the send flow
-    if (pendingRecipientId !== undefined && pendingRecipientId !== user.id) {
-      const recipient = await userRepo.findById(pendingRecipientId)
-      if (!recipient) {
-        await ctx.reply(messages.errors.user_not_found)
-        return
+    if (pendingRecipientId !== undefined) {
+      if (pendingRecipientId === user.id) {
+        await ctx.reply(messages.bot.cannot_self_message, { parse_mode: "MarkdownV2" })
+      } else {
+        const recipient = await userRepo.findById(pendingRecipientId)
+        if (!recipient) {
+          await ctx.reply(messages.errors.user_not_found, { parse_mode: "MarkdownV2" })
+        } else {
+          await stateService.set(from.id, {
+            name: "sending_message",
+            recipientId: recipient.id,
+            recipientName: recipient.display_name || recipient.username || "someone",
+          })
+          await ctx.reply(messages.bot.sending_to, { parse_mode: "MarkdownV2" })
+          return
+        }
       }
-      await stateService.set(from.id, {
-        name: "sending_message",
-        recipientId: recipient.id,
-        recipientName: recipient.display_name || recipient.username || "someone",
-      })
-      await ctx.reply(messages.bot.sending_to)
-      return
     }
 
-    // Default: reset any stale active state and show the main menu
     await stateService.reset(from.id)
-    const name = user.display_name || from.first_name || "there"
+    const name = escapeMarkdownV2(user.display_name || from.first_name || "there")
     await ctx.reply(t(messages.bot.welcome_back, { name }), {
+      parse_mode: "MarkdownV2",
       reply_markup: buildMainMenuKeyboard(messages),
     })
   })

@@ -1,4 +1,4 @@
-import { getMessages, type Locale } from "@anonychatmebot/shared"
+import { escapeMarkdownV2, getMessages, type Locale } from "@anonychatmebot/shared"
 import { Api, type Bot, InlineKeyboard } from "grammy"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
@@ -36,7 +36,8 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
     await ctx.answerCallbackQuery()
 
     // Show content with action buttons — sent as reply to the notification message
-    const sent = await ctx.reply(message.content, {
+    const sent = await ctx.reply(escapeMarkdownV2(message.content), {
+      parse_mode: "MarkdownV2",
       reply_markup: buildMessageKeyboard(msgs, messageId),
       reply_parameters: { message_id: ctx.callbackQuery.message?.message_id ?? 0 },
     })
@@ -49,7 +50,9 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
       const sender = await userRepo.findByTelegramId(message.sender_telegram_id)
       if (sender) {
         const senderMsgs = getMessages((sender.locale as Locale) ?? "en")
-        await api.sendMessage(sender.telegram_id, senderMsgs.bot.message_read_receipt)
+        await api.sendMessage(sender.telegram_id, senderMsgs.bot.message_read_receipt, {
+          parse_mode: "MarkdownV2",
+        })
       }
     }
 
@@ -84,6 +87,7 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
 
     await ctx.answerCallbackQuery()
     await ctx.reply(msgs.bot.reply_prompt, {
+      parse_mode: "MarkdownV2",
       reply_parameters: { message_id: viewMessageId },
     })
   })

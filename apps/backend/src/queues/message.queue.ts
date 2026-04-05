@@ -52,6 +52,7 @@ export async function handleMessageQueue(
     const keyboard = new InlineKeyboard().text(messages.actions.view, `view_msg:${messageId}`)
 
     const sent = await api.sendMessage(recipientTelegramId, messages.bot.new_message_notification, {
+      parse_mode: "MarkdownV2",
       reply_markup: keyboard,
     })
 

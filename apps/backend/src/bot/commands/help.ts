@@ -11,7 +11,7 @@ export function registerHelpCommand(bot: Bot, env: Bindings) {
     const user = await new UserRepository(createDb(env.DB)).findByTelegramId(ctx.from.id)
     const messages = getMessages((user?.locale as Locale) ?? "en")
 
-    await ctx.reply(messages.help.text, { parse_mode: "Markdown" })
+    await ctx.reply(messages.help.text, { parse_mode: "MarkdownV2" })
   }
 
   bot.hears(allTexts("help"), handle)

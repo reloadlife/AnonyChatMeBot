@@ -15,6 +15,7 @@ export function registerSettingsCommand(bot: Bot, env: Bindings) {
     const messages = getMessages((user?.locale as Locale) ?? "en")
 
     await ctx.reply(messages.settings.title, {
+      parse_mode: "MarkdownV2",
       reply_markup: buildSettingsKeyboard(messages, user?.receiving_messages ?? true),
     })
   }
@@ -28,6 +29,7 @@ export function registerSettingsCommand(bot: Bot, env: Bindings) {
     const user = await new UserRepository(createDb(env.DB)).findByTelegramId(ctx.from.id)
     const messages = getMessages((user?.locale as Locale) ?? "en")
     await ctx.reply(messages.onboarding.select_locale, {
+      parse_mode: "MarkdownV2",
       reply_markup: buildLocaleSelector(),
     })
   })
@@ -42,6 +44,7 @@ export function registerSettingsCommand(bot: Bot, env: Bindings) {
     await new StateService(env.STATE_KV).set(ctx.from.id, { name: "onboarding_name" })
     await ctx.answerCallbackQuery()
     await ctx.reply(messages.onboarding.enter_name, {
+      parse_mode: "MarkdownV2",
       reply_markup: buildNameRequestKeyboard(ctx.from.first_name || "..."),
     })
   })

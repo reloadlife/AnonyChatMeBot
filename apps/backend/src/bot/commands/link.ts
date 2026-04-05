@@ -16,7 +16,7 @@ export function registerLinkCommand(bot: Bot, env: Bindings) {
     const hash = encodeId(env.LINK_SALT, user.id)
     const link = `https://t.me/${ctx.me.username}?start=${hash}`
     await ctx.reply(`${messages.bot.your_link}\n\`${link}\`\n\n${messages.bot.link_hint}`, {
-      parse_mode: "Markdown",
+      parse_mode: "MarkdownV2",
     })
   }
 

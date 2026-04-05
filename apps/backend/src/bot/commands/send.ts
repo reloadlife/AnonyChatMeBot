@@ -14,7 +14,7 @@ export function registerSendCommand(bot: Bot, env: Bindings) {
     const messages = getMessages((user?.locale as Locale) ?? "en")
 
     await new StateService(env.STATE_KV).set(ctx.from.id, { name: "asking_recipient" })
-    await ctx.reply(messages.bot.ask_recipient)
+    await ctx.reply(messages.bot.ask_recipient, { parse_mode: "MarkdownV2" })
   }
 
   bot.hears(allTexts("send_direct"), handle)

@@ -2,32 +2,35 @@ name = "anonychatmebot-backend"
 main = "src/index.ts"
 compatibility_date = "2024-12-05"
 compatibility_flags = ["nodejs_compat"]
+account_id = "db10503205acaca78a1df56b6a24516f"
 
 [vars]
 ENVIRONMENT = "production"
+FRONTEND_URL = "http://localhost:3000"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "anonychatmebot-db"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "1a88667f-2415-47fe-bdf2-deffb676919b"
+migrations_dir = "migrations"
 
 [[r2_buckets]]
 binding = "BUCKET"
 bucket_name = "anonychatmebot-media"
 
 [[queues.producers]]
-queue = "message-delivery"
+queue = "anonychatmebot-message-delivery"
 binding = "MESSAGE_QUEUE"
 
 [[queues.consumers]]
-queue = "message-delivery"
+queue = "anonychatmebot-message-delivery"
 max_batch_size = 10
 max_batch_timeout = 30
 
 [[kv_namespaces]]
 binding = "STATE_KV"
-id = "REPLACE_WITH_KV_ID"
-preview_id = "REPLACE_WITH_KV_PREVIEW_ID"
+id = "fa9e1434485f43d29b952732ac50d8ad"
+preview_id = "1cd2c339719e413a9cf4b473c981ecc3"
 
 [[rules]]
 type = "Text"

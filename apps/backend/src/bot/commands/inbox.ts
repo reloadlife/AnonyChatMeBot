@@ -1,4 +1,4 @@
-import { getMessages, type Locale, t } from "@anonychatmebot/shared"
+import { escapeMarkdownV2, getMessages, type Locale, t } from "@anonychatmebot/shared"
 import type { Bot, Context } from "grammy"
 import { allTexts } from "~/bot/utils/locale"
 import { createDb } from "~/db/index"
@@ -24,7 +24,7 @@ export function registerInboxCommand(bot: Bot, env: Bindings) {
     const allMessages = await new MessageRepository(db).findByRecipient(user.id)
 
     if (allMessages.length === 0) {
-      await ctx.reply(messages.bot.no_messages)
+      await ctx.reply(messages.bot.no_messages, { parse_mode: "MarkdownV2" })
       return
     }
 
@@ -38,12 +38,15 @@ export function registerInboxCommand(bot: Bot, env: Bindings) {
     })
 
     const items = slice
-      .map((msg, i) => formatMessageItem(safePage * PAGE_SIZE + i + 1, msg.content, msg.created_at))
-      .join("\n\n─────────────\n\n")
+      .map((msg, i) =>
+        formatMessageItem(safePage * PAGE_SIZE + i + 1, escapeMarkdownV2(msg.content), msg.created_at),
+      )
+      .join("\n\n\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\n\n")
 
     const keyboard = buildInboxKeyboard(safePage, totalPages)
 
     await ctx.reply(`${header}\n\n${items}`, {
+      parse_mode: "MarkdownV2",
       reply_markup: keyboard.inline_keyboard.length > 0 ? keyboard : undefined,
     })
   }

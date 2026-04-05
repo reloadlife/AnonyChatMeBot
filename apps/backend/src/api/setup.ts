@@ -21,11 +21,7 @@ setupRouter.post("/", async (c) => {
   const { protocol, host } = new URL(c.req.url)
   const webhookUrl = `${protocol}//${host}/webhook`
 
-  await bot.api.setWebhook(webhookUrl, {
-    // Only subscribe to what the bot actually uses.
-    // Omitting a type means Telegram won't send those updates, reducing noise.
-    allowed_updates: ["message", "callback_query"],
-  })
+  await bot.api.setWebhook(webhookUrl)
 
   await syncBotCommands(bot.api)
 
