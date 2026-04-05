@@ -10,6 +10,7 @@ export type Bindings = {
   STATE_KV: KVNamespace
   BOT_TOKEN: string
   WEBHOOK_SECRET: string
+  LINK_SALT: string
   ENVIRONMENT: string
 }
 

@@ -4,6 +4,7 @@ import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
 import { UserRepository } from "~/repositories/user.repository"
 import { StateService } from "~/services/state.service"
+import { decodeId } from "~/utils/hashid"
 import { buildMainMenuKeyboard } from "~/views/telegram/main-menu.view"
 import { buildLocaleSelector, buildNameRequestKeyboard } from "~/views/telegram/onboarding.view"
 
@@ -41,11 +42,11 @@ export function registerStartCommand(bot: Bot, env: Bindings) {
     // state === "idle" or "sending_message" (re-anchoring the user to the menu)
     const messages = getMessages(user.locale as Locale)
 
-    // Deep-link payload: /start <recipientId> — route to anonymous message flow
+    // Deep-link payload: /start <hash> — decode hashid and route to anonymous message flow
     const payload = ctx.match?.trim()
     if (payload) {
-      const recipientId = Number(payload)
-      if (!Number.isNaN(recipientId) && recipientId !== user.id) {
+      const recipientId = decodeId(env.LINK_SALT, payload)
+      if (recipientId !== null && recipientId !== user.id) {
         const recipient = await userRepo.findById(recipientId)
         if (!recipient) {
           await ctx.reply(messages.errors.user_not_found)
