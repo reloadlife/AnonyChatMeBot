@@ -1,6 +1,6 @@
 import type { Bot, Context } from "grammy"
+import { allTexts } from "~/bot/utils/locale"
 import type { Bindings } from "~/index"
-import { allTexts } from "./_locale"
 
 export function registerSettingsCommand(bot: Bot, _env: Bindings) {
   const handle = async (ctx: Context) => {

@@ -1,9 +1,9 @@
 import { getMessages, type Locale } from "@anonychatmebot/shared"
 import type { Bot, Context } from "grammy"
+import { allTexts } from "~/bot/utils/locale"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
 import { UserRepository } from "~/repositories/user.repository"
-import { allTexts } from "./_locale"
 
 export function registerInboxCommand(bot: Bot, env: Bindings) {
   const handle = async (ctx: Context) => {
