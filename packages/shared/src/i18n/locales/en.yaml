@@ -8,6 +8,11 @@ bot:
   message_received: "📩 You received a new anonymous message:"
   no_messages: "📭 No messages yet."
   sending_to: "📨 Sending an anonymous message. Type it below:"
+  ask_recipient: "🔗 Paste the person's link (e.g. t.me/...?start=...):"
+  invalid_link: "❌ Invalid link. Please try again."
+  cannot_self_message: "❌ You can't send an anonymous message to yourself."
+  inbox_header: "📬 Messages — page {page} of {total}:"
+  inbox_item: "#{n}  {content}\n🕐 {ago}"
 
 onboarding:
   select_locale: "👋 Welcome! Please choose your language:"
@@ -26,6 +31,32 @@ commands:
   inbox: "View your received messages"
   settings: "Change language and display name"
   help: "Help and FAQ"
+
+settings:
+  title: "⚙️ Settings"
+  change_language: "🌐 Change language"
+  change_name: "✏️ Change display name"
+  name_updated: "✅ Display name updated to {name}!"
+  language_updated: "✅ Language changed!"
+
+help:
+  text: |
+    *❓ Help & FAQ*
+
+    *What is AnonyChatMe?*
+    A bot that lets people send you anonymous messages — they never see your identity, and you never see theirs.
+
+    *How do I receive messages?*
+    Tap 📩 *I want to receive messages* or use /link to get your personal link. Share it anywhere.
+
+    *How do I send a message?*
+    Tap 📤 *Send direct message* or use /send and paste someone's link. Then type your message.
+
+    *Are messages truly anonymous?*
+    Yes. The sender's identity is never revealed to you, and yours is never revealed to them.
+
+    *Can I change my name or language?*
+    Yes — tap ⚙️ *Settings*.
 
 errors:
   generic: "❌ Something went wrong. Please try again."

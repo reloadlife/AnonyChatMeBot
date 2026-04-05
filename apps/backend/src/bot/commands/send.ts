@@ -1,16 +1,20 @@
+import { getMessages, type Locale } from "@anonychatmebot/shared"
 import type { Bot, Context } from "grammy"
 import { allTexts } from "~/bot/utils/locale"
+import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
+import { UserRepository } from "~/repositories/user.repository"
+import { StateService } from "~/services/state.service"
 
-export function registerSendCommand(bot: Bot, _env: Bindings) {
+export function registerSendCommand(bot: Bot, env: Bindings) {
   const handle = async (ctx: Context) => {
-    // TODO: ask for a username or link, then transition to sending_message state:
-    //   await new StateService(env.STATE_KV).transition(ctx.from!.id, {
-    //     name: "sending_message",
-    //     recipientId: <resolved id>,
-    //     recipientName: <resolved name>,
-    //   })
-    await ctx.reply("🚧 Coming soon")
+    if (!ctx.from) return
+    const db = createDb(env.DB)
+    const user = await new UserRepository(db).findByTelegramId(ctx.from.id)
+    const messages = getMessages((user?.locale as Locale) ?? "en")
+
+    await new StateService(env.STATE_KV).set(ctx.from.id, { name: "asking_recipient" })
+    await ctx.reply(messages.bot.ask_recipient)
   }
 
   bot.hears(allTexts("send_direct"), handle)

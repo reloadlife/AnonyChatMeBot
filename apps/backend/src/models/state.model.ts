@@ -13,6 +13,7 @@ export type BotState =
   | { name: "idle" }
   | { name: "onboarding_locale" }
   | { name: "onboarding_name" }
+  | { name: "asking_recipient" }
   | { name: "sending_message"; recipientId: number; recipientName: string }
 
 export type StateName = BotState["name"]
@@ -22,9 +23,10 @@ export type StateName = BotState["name"]
  * A → B is valid only if B appears in TRANSITIONS[A].
  */
 export const TRANSITIONS: Readonly<Record<StateName, StateName[]>> = {
-  idle: ["onboarding_locale", "sending_message"],
+  idle: ["onboarding_locale", "onboarding_name", "sending_message", "asking_recipient"],
   onboarding_locale: ["onboarding_name"],
   onboarding_name: ["idle"],
+  asking_recipient: ["sending_message", "idle"],
   sending_message: ["idle"],
 }
 
@@ -35,5 +37,6 @@ export const TRANSITIONS: Readonly<Record<StateName, StateName[]>> = {
 export const STATE_TTL: Readonly<Record<Exclude<StateName, "idle">, number>> = {
   onboarding_locale: 24 * 60 * 60, // 24 h — resume if user closes and reopens
   onboarding_name: 24 * 60 * 60, // 24 h
+  asking_recipient: 5 * 60, // 5 min — short window for recipient resolution
   sending_message: 60 * 60, // 1 h — abandon if user walks away mid-compose
 }

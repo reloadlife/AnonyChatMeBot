@@ -37,6 +37,14 @@ export class UserRepository {
       .where(eq(users.id, id))
   }
 
+  /** Settings locale change — does NOT advance onboarding_step. */
+  async updateLocale(id: number, locale: string): Promise<void> {
+    await this.db
+      .update(users)
+      .set({ locale: locale as UserModel["locale"] })
+      .where(eq(users.id, id))
+  }
+
   /** Step 2 complete: save display name, mark onboarding done. */
   async completeOnboarding(id: number, displayName: string): Promise<void> {
     await this.db

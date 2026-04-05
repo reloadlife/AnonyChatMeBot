@@ -1,5 +1,6 @@
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
+import type { MessageJob } from "~/queues/message.queue"
 import { MessageRepository } from "~/repositories/message.repository"
 import { UserRepository } from "~/repositories/user.repository"
 import { serializeMessage } from "~/serializers/message.serializer"
@@ -14,7 +15,13 @@ export class MessageController {
     this.userRepo = new UserRepository(db)
   }
 
-  async sendAnonymousMessage(senderTelegramId: number, recipientUserId: number, content: string) {
+  async sendAnonymousMessage(
+    senderTelegramId: number,
+    recipientUserId: number,
+    recipientTelegramId: number,
+    recipientLocale: string,
+    content: string,
+  ) {
     const recipient = await this.userRepo.findById(recipientUserId)
     if (!recipient) throw new Error("Recipient not found")
 
@@ -24,7 +31,13 @@ export class MessageController {
       content,
     })
 
-    await this.env.MESSAGE_QUEUE.send({ messageId: message.id })
+    const job: MessageJob = {
+      messageId: message.id,
+      recipientTelegramId,
+      recipientLocale,
+      content,
+    }
+    await this.env.MESSAGE_QUEUE.send(job)
 
     return serializeMessage(message)
   }

@@ -8,6 +8,11 @@ bot:
   message_received: "📩 Du hast eine neue anonyme Nachricht erhalten:"
   no_messages: "📭 Noch keine Nachrichten."
   sending_to: "📨 Anonyme Nachricht senden. Schreibe sie unten:"
+  ask_recipient: "🔗 Füge den Link der Person ein (z.B. t.me/...?start=...):"
+  invalid_link: "❌ Ungültiger Link. Bitte versuche es erneut."
+  cannot_self_message: "❌ Du kannst keine anonyme Nachricht an dich selbst senden."
+  inbox_header: "📬 Nachrichten — Seite {page} von {total}:"
+  inbox_item: "#{n}  {content}\n🕐 {ago}"
 
 onboarding:
   select_locale: "👋 Willkommen! Bitte wähle deine Sprache:"
@@ -26,6 +31,32 @@ commands:
   inbox: "Empfangene Nachrichten anzeigen"
   settings: "Sprache und Namen ändern"
   help: "Hilfe und FAQ"
+
+settings:
+  title: "⚙️ Einstellungen"
+  change_language: "🌐 Sprache ändern"
+  change_name: "✏️ Namen ändern"
+  name_updated: "✅ Name auf {name} aktualisiert!"
+  language_updated: "✅ Sprache geändert!"
+
+help:
+  text: |
+    *❓ Hilfe & FAQ*
+
+    *Was ist AnonyChatMe?*
+    Ein Bot, mit dem du anonyme Nachrichten empfangen kannst — der Absender bleibt immer anonym.
+
+    *Wie empfange ich Nachrichten?*
+    Tippe auf 📩 *Nachrichten empfangen* oder nutze /link für deinen persönlichen Link. Teile ihn.
+
+    *Wie sende ich eine Nachricht?*
+    Tippe auf 📤 *Direkte Nachricht senden* oder /send und füge den Link der Person ein.
+
+    *Sind Nachrichten wirklich anonym?*
+    Ja. Die Identität des Absenders wird nie preisgegeben.
+
+    *Kann ich Name oder Sprache ändern?*
+    Ja — tippe auf ⚙️ *Einstellungen*.
 
 errors:
   generic: "❌ Etwas ist schiefgelaufen. Bitte versuche es erneut."

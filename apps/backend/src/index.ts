@@ -29,8 +29,9 @@ app.route("/api", api)
 export default {
   fetch: app.fetch,
 
-  async queue(batch: MessageBatch<{ messageId: number }>, env: Bindings): Promise<void> {
+  async queue(batch: MessageBatch<unknown>, env: Bindings): Promise<void> {
     const { handleMessageQueue } = await import("~/queues/message.queue")
-    await handleMessageQueue(batch, env)
+    // biome-ignore lint/suspicious/noExplicitAny: queue batch is typed at send time
+    await handleMessageQueue(batch as any, env)
   },
 }

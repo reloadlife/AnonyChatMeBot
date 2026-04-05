@@ -36,7 +36,12 @@ messagesRouter.post("/send", async (c) => {
     content: body.content.trim(),
   })
 
-  await c.env.MESSAGE_QUEUE.send({ messageId: message.id })
+  await c.env.MESSAGE_QUEUE.send({
+    messageId: message.id,
+    recipientTelegramId: recipient.telegram_id,
+    recipientLocale: recipient.locale,
+    content: body.content.trim(),
+  })
 
   return c.json({ message: serializeMessage(message) }, 201)
 })

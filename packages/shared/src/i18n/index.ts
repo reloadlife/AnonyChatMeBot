@@ -19,6 +19,11 @@ export interface I18nMessages {
     message_received: string
     no_messages: string
     sending_to: string
+    ask_recipient: string
+    invalid_link: string
+    cannot_self_message: string
+    inbox_header: string
+    inbox_item: string
   }
   onboarding: {
     select_locale: string
@@ -37,6 +42,16 @@ export interface I18nMessages {
     inbox: string
     settings: string
     help: string
+  }
+  settings: {
+    title: string
+    change_language: string
+    change_name: string
+    name_updated: string
+    language_updated: string
+  }
+  help: {
+    text: string
   }
   errors: {
     generic: string
