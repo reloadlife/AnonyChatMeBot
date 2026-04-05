@@ -39,11 +39,15 @@ export function registerInboxCommand(bot: Bot, env: Bindings) {
 
     const items = slice
       .map((msg, i) =>
-        formatMessageItem(safePage * PAGE_SIZE + i + 1, escapeMarkdownV2(msg.content), msg.created_at),
+        formatMessageItem(
+          safePage * PAGE_SIZE + i + 1,
+          escapeMarkdownV2(msg.content),
+          msg.created_at,
+        ),
       )
       .join("\n\n\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\n\n")
 
-    const keyboard = buildInboxKeyboard(safePage, totalPages)
+    const keyboard = buildInboxKeyboard(safePage, totalPages, messages)
 
     await ctx.reply(`${header}\n\n${items}`, {
       parse_mode: "MarkdownV2",

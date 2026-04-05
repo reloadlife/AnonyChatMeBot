@@ -1,4 +1,10 @@
-import { escapeMarkdownV2, getMessages, type Locale, resolveLocale, t } from "@anonychatmebot/shared"
+import {
+  escapeMarkdownV2,
+  getMessages,
+  type Locale,
+  resolveLocale,
+  t,
+} from "@anonychatmebot/shared"
 import type { Bot } from "grammy"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"

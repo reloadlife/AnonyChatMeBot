@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm"
 import type { Db } from "~/db/index"
-import { blocks } from "~/db/schema"
+import { blocks, type BlockModel } from "~/db/schema"
 
 export class BlockRepository {
   constructor(private readonly db: Db) {}
@@ -24,5 +24,24 @@ export class BlockRepository {
       .insert(blocks)
       .values({ blocker_user_id: blockerUserId, sender_telegram_id: senderTelegramId })
       .onConflictDoNothing()
+  }
+
+  async list(blockerUserId: number): Promise<BlockModel[]> {
+    return this.db
+      .select()
+      .from(blocks)
+      .where(eq(blocks.blocker_user_id, blockerUserId))
+      .all()
+  }
+
+  async unblock(blockerUserId: number, senderTelegramId: number): Promise<void> {
+    await this.db
+      .delete(blocks)
+      .where(
+        and(
+          eq(blocks.blocker_user_id, blockerUserId),
+          eq(blocks.sender_telegram_id, senderTelegramId),
+        ),
+      )
   }
 }

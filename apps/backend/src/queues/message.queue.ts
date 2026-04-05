@@ -51,6 +51,7 @@ export async function handleMessageQueue(
     // Send notification without content — recipient must tap to view (preserves privacy)
     const keyboard = new InlineKeyboard().text(messages.actions.view, `view_msg:${messageId}`)
 
+    // Let Telegram API errors propagate — Cloudflare Queue will retry the message automatically
     const sent = await api.sendMessage(recipientTelegramId, messages.bot.new_message_notification, {
       parse_mode: "MarkdownV2",
       reply_markup: keyboard,

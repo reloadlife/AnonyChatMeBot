@@ -1,3 +1,5 @@
+export type TooLongError = Error & { max: number }
+
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
 import type { MessageJob } from "~/queues/message.queue"
@@ -15,6 +17,8 @@ export class MessageController {
     this.userRepo = new UserRepository(db)
   }
 
+  static readonly MAX_MESSAGE_LENGTH = 4000
+
   async sendAnonymousMessage(
     senderTelegramId: number,
     recipientUserId: number,
@@ -22,6 +26,12 @@ export class MessageController {
     recipientLocale: string,
     content: string,
   ) {
+    if (content.length > MessageController.MAX_MESSAGE_LENGTH) {
+      const err = new Error("MESSAGE_TOO_LONG")
+      ;(err as Error & { max: number }).max = MessageController.MAX_MESSAGE_LENGTH
+      throw err
+    }
+
     const recipient = await this.userRepo.findById(recipientUserId)
     if (!recipient) throw new Error("Recipient not found")
 

@@ -8,5 +8,6 @@ export class ReportRepository {
     await this.db
       .insert(reports)
       .values({ message_id: messageId, reporter_user_id: reporterUserId })
+      .onConflictDoNothing()
   }
 }

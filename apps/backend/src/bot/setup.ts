@@ -11,6 +11,7 @@ function buildCommands(locale: Locale): BotCommand[] {
     { command: "send", description: m.commands.send },
     { command: "inbox", description: m.commands.inbox },
     { command: "settings", description: m.commands.settings },
+    { command: "cancel", description: m.commands.cancel },
     { command: "help", description: m.commands.help },
   ]
 }

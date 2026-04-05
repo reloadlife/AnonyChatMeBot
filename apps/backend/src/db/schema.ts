@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
+import { integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core"
 
 export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -33,29 +33,37 @@ export const messages = sqliteTable("messages", {
 })
 
 /** Tracks senders a user has blocked. Uses sender_telegram_id (not user ID) since senders are anonymous. */
-export const blocks = sqliteTable("blocks", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  blocker_user_id: integer("blocker_user_id")
-    .notNull()
-    .references(() => users.id),
-  sender_telegram_id: integer("sender_telegram_id").notNull(),
-  created_at: text("created_at")
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
-})
+export const blocks = sqliteTable(
+  "blocks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    blocker_user_id: integer("blocker_user_id")
+      .notNull()
+      .references(() => users.id),
+    sender_telegram_id: integer("sender_telegram_id").notNull(),
+    created_at: text("created_at")
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+  },
+  (t) => [uniqueIndex("blocks_unique").on(t.blocker_user_id, t.sender_telegram_id)],
+)
 
-export const reports = sqliteTable("reports", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  message_id: integer("message_id")
-    .notNull()
-    .references(() => messages.id),
-  reporter_user_id: integer("reporter_user_id")
-    .notNull()
-    .references(() => users.id),
-  created_at: text("created_at")
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
-})
+export const reports = sqliteTable(
+  "reports",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    message_id: integer("message_id")
+      .notNull()
+      .references(() => messages.id),
+    reporter_user_id: integer("reporter_user_id")
+      .notNull()
+      .references(() => users.id),
+    created_at: text("created_at")
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+  },
+  (t) => [uniqueIndex("reports_unique").on(t.message_id, t.reporter_user_id)],
+)
 
 // Inferred types — single source of truth for DB structure and TypeScript types
 export type UserModel = typeof users.$inferSelect

@@ -1,4 +1,4 @@
-import { getMessages, type Locale } from "@anonychatmebot/shared"
+import { getMessages, type Locale, t } from "@anonychatmebot/shared"
 import type { Bot } from "grammy"
 import { MessageController } from "~/controllers/message.controller"
 import { createDb } from "~/db/index"
@@ -65,13 +65,26 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
 
       if (sender) {
         const controller = new MessageController(env)
-        await controller.sendAnonymousMessage(
-          from.id,
-          sender.id,
-          sender.telegram_id,
-          sender.locale,
-          ctx.message.text,
-        )
+        try {
+          await controller.sendAnonymousMessage(
+            from.id,
+            sender.id,
+            sender.telegram_id,
+            sender.locale,
+            ctx.message.text,
+          )
+        } catch (err) {
+          if ((err as Error).message === "MESSAGE_TOO_LONG") {
+            await ctx.reply(
+              t(messages.bot.message_too_long, {
+                max: String(MessageController.MAX_MESSAGE_LENGTH),
+              }),
+              { parse_mode: "MarkdownV2" },
+            )
+            return
+          }
+          throw err
+        }
       }
 
       await stateService.reset(from.id)
@@ -92,13 +105,26 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
       }
 
       const controller = new MessageController(env)
-      await controller.sendAnonymousMessage(
-        from.id,
-        recipient.id,
-        recipient.telegram_id,
-        recipient.locale,
-        ctx.message.text,
-      )
+      try {
+        await controller.sendAnonymousMessage(
+          from.id,
+          recipient.id,
+          recipient.telegram_id,
+          recipient.locale,
+          ctx.message.text,
+        )
+      } catch (err) {
+        if ((err as Error).message === "MESSAGE_TOO_LONG") {
+          await ctx.reply(
+            t(messages.bot.message_too_long, {
+              max: String(MessageController.MAX_MESSAGE_LENGTH),
+            }),
+            { parse_mode: "MarkdownV2" },
+          )
+          return
+        }
+        throw err
+      }
 
       await stateService.reset(from.id)
       await ctx.reply(messages.bot.message_sent, { parse_mode: "MarkdownV2" })

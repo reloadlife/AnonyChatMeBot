@@ -3,20 +3,25 @@ import type { Bot, Context } from "grammy"
 import { allTexts } from "~/bot/utils/locale"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
+import { BlockRepository } from "~/repositories/block.repository"
 import { UserRepository } from "~/repositories/user.repository"
 import { StateService } from "~/services/state.service"
 import { buildLocaleSelector, buildNameRequestKeyboard } from "~/views/telegram/onboarding.view"
-import { buildSettingsKeyboard } from "~/views/telegram/settings.view"
+import { buildBlockedListKeyboard, buildSettingsKeyboard } from "~/views/telegram/settings.view"
 
 export function registerSettingsCommand(bot: Bot, env: Bindings) {
   const handle = async (ctx: Context) => {
     if (!ctx.from) return
-    const user = await new UserRepository(createDb(env.DB)).findByTelegramId(ctx.from.id)
+    const db = createDb(env.DB)
+    const user = await new UserRepository(db).findByTelegramId(ctx.from.id)
     const messages = getMessages((user?.locale as Locale) ?? "en")
+    const blockedCount = user
+      ? (await new BlockRepository(db).list(user.id)).length
+      : 0
 
     await ctx.reply(messages.settings.title, {
       parse_mode: "MarkdownV2",
-      reply_markup: buildSettingsKeyboard(messages, user?.receiving_messages ?? true),
+      reply_markup: buildSettingsKeyboard(messages, user?.receiving_messages ?? true, blockedCount),
     })
   }
 
@@ -54,6 +59,7 @@ export function registerSettingsCommand(bot: Bot, env: Bindings) {
     if (!ctx.from) return ctx.answerCallbackQuery()
     const db = createDb(env.DB)
     const userRepo = new UserRepository(db)
+    const blockRepo = new BlockRepository(db)
     const user = await userRepo.findByTelegramId(ctx.from.id)
     if (!user) return ctx.answerCallbackQuery()
 
@@ -62,10 +68,61 @@ export function registerSettingsCommand(bot: Bot, env: Bindings) {
 
     const messages = getMessages((user.locale as Locale) ?? "en")
     const status = newValue ? messages.settings.receiving_on : messages.settings.receiving_off
+    const blockedCount = (await blockRepo.list(user.id)).length
 
     await ctx.answerCallbackQuery({ text: status, show_alert: true })
     await ctx.editMessageReplyMarkup({
-      reply_markup: buildSettingsKeyboard(messages, newValue),
+      reply_markup: buildSettingsKeyboard(messages, newValue, blockedCount),
     })
+  })
+
+  // Show blocked senders list
+  bot.callbackQuery("settings:blocked", async (ctx) => {
+    if (!ctx.from) return ctx.answerCallbackQuery()
+    const db = createDb(env.DB)
+    const user = await new UserRepository(db).findByTelegramId(ctx.from.id)
+    if (!user) return ctx.answerCallbackQuery()
+
+    const messages = getMessages((user.locale as Locale) ?? "en")
+    const blocked = await new BlockRepository(db).list(user.id)
+
+    await ctx.answerCallbackQuery()
+
+    if (blocked.length === 0) {
+      await ctx.reply(messages.settings.no_blocked, { parse_mode: "MarkdownV2" })
+      return
+    }
+
+    const ids = blocked.map((b) => b.sender_telegram_id)
+    await ctx.reply(messages.settings.no_blocked.replace("📭", "🚫"), {
+      parse_mode: "MarkdownV2",
+      reply_markup: buildBlockedListKeyboard(ids),
+    })
+  })
+
+  // Unblock a sender
+  bot.callbackQuery(/^unblock:(\d+)$/, async (ctx) => {
+    if (!ctx.from) return ctx.answerCallbackQuery()
+    const db = createDb(env.DB)
+    const userRepo = new UserRepository(db)
+    const blockRepo = new BlockRepository(db)
+    const user = await userRepo.findByTelegramId(ctx.from.id)
+    if (!user) return ctx.answerCallbackQuery()
+
+    const senderTelegramId = Number(ctx.match[1])
+    await blockRepo.unblock(user.id, senderTelegramId)
+
+    const messages = getMessages((user.locale as Locale) ?? "en")
+    await ctx.answerCallbackQuery({ text: messages.settings.unblocked, show_alert: true })
+
+    // Refresh the list in-place
+    const remaining = await blockRepo.list(user.id)
+    if (remaining.length === 0) {
+      await ctx.editMessageReplyMarkup({ reply_markup: undefined })
+    } else {
+      await ctx.editMessageReplyMarkup({
+        reply_markup: buildBlockedListKeyboard(remaining.map((b) => b.sender_telegram_id)),
+      })
+    }
   })
 }

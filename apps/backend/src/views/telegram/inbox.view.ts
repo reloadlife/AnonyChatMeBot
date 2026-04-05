@@ -1,3 +1,4 @@
+import type { I18nMessages } from "@anonychatmebot/shared"
 import { InlineKeyboard } from "grammy"
 
 /** Returns a human-readable relative time string for a given ISO timestamp. */
@@ -22,12 +23,16 @@ export function formatMessageItem(n: number, content: string, createdAt: string)
 }
 
 /**
- * Build the pagination inline keyboard.
+ * Build the pagination inline keyboard with i18n'd button labels.
  * Omits Prev on page 0, omits Next on last page.
  */
-export function buildInboxKeyboard(page: number, totalPages: number): InlineKeyboard {
+export function buildInboxKeyboard(
+  page: number,
+  totalPages: number,
+  messages: I18nMessages,
+): InlineKeyboard {
   const kb = new InlineKeyboard()
-  if (page > 0) kb.text("◀ Prev", `inbox:${page - 1}`)
-  if (page < totalPages - 1) kb.text("Next ▶", `inbox:${page + 1}`)
+  if (page > 0) kb.text(messages.inbox.prev, `inbox:${page - 1}`)
+  if (page < totalPages - 1) kb.text(messages.inbox.next, `inbox:${page + 1}`)
   return kb
 }
