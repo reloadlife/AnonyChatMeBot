@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    "unifiedjs.vscode-yaml",
+    "redhat.vscode-yaml"
+  ]
+}

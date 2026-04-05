@@ -1,0 +1,25 @@
+name = "anonychatmebot-backend"
+main = "src/index.ts"
+compatibility_date = "2024-12-05"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "production"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "anonychatmebot-db"
+database_id = "REPLACE_WITH_D1_ID"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "anonychatmebot-media"
+
+[[queues.producers]]
+queue = "message-delivery"
+binding = "MESSAGE_QUEUE"
+
+[[queues.consumers]]
+queue = "message-delivery"
+max_batch_size = 10
+max_batch_timeout = 30

@@ -1,0 +1,9 @@
+bot:
+  welcome: "Welcome! Share your link to receive anonymous messages."
+  send_message_prompt: "Type your anonymous message below:"
+  message_sent: "Your message has been sent anonymously!"
+  message_received: "You received a new anonymous message:"
+
+errors:
+  generic: "Something went wrong. Please try again."
+  not_found: "Not found."

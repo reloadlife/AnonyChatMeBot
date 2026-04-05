@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "module": "ESNext",
+    "skipLibCheck": true
+  },
+  "references": [{ "path": "./packages/shared" }, { "path": "./apps/backend" }]
+  // apps/frontend has its own tsconfig managed by Vite (noEmit: true, no composite)
+}

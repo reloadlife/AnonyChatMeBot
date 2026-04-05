@@ -1,0 +1,24 @@
+{
+  "name": "@anonychatmebot/backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "dev:bot": "bun run scripts/dev-bot.ts",
+    "deploy": "wrangler deploy",
+    "test": "bun test",
+    "build": "wrangler deploy --dry-run"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "grammy": "^1.31.0",
+    "ai": "^6.0.146",
+    "@anonychatmebot/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241205.0",
+    "@types/node": "^25.5.2",
+    "wrangler": "^4.0.0"
+  }
+}
