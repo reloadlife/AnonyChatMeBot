@@ -1,39 +1,30 @@
-import type { MessageModel } from "../models/message.model"
+import { desc, eq } from "drizzle-orm"
+import type { Db } from "~/db/index"
+import { type MessageModel, messages, type NewMessage } from "~/db/schema"
 
 export class MessageRepository {
-  constructor(private readonly db: D1Database) {}
+  constructor(private readonly db: Db) {}
 
-  async create(data: Omit<MessageModel, "id" | "created_at">): Promise<MessageModel> {
-    const result = await this.db
-      .prepare(
-        `INSERT INTO messages (sender_telegram_id, recipient_user_id, content, delivered)
-         VALUES (?, ?, ?, ?)`,
-      )
-      .bind(data.sender_telegram_id, data.recipient_user_id, data.content, 0)
-      .run()
-    const id = result.meta.last_row_id
-    const created = await this.findById(id)
-    if (!created) throw new Error("Failed to create message")
-    return created
+  async create(data: NewMessage): Promise<MessageModel> {
+    const result = await this.db.insert(messages).values(data).returning().get()
+    if (!result) throw new Error("Failed to create message")
+    return result
   }
 
   async findById(id: number): Promise<MessageModel | null> {
-    const result = await this.db
-      .prepare("SELECT * FROM messages WHERE id = ?")
-      .bind(id)
-      .first<MessageModel>()
+    const result = await this.db.select().from(messages).where(eq(messages.id, id)).get()
     return result ?? null
   }
 
   async findByRecipient(recipientUserId: number): Promise<MessageModel[]> {
-    const result = await this.db
-      .prepare("SELECT * FROM messages WHERE recipient_user_id = ? ORDER BY created_at DESC")
-      .bind(recipientUserId)
-      .all<MessageModel>()
-    return result.results
+    return this.db
+      .select()
+      .from(messages)
+      .where(eq(messages.recipient_user_id, recipientUserId))
+      .orderBy(desc(messages.created_at))
   }
 
   async markDelivered(id: number): Promise<void> {
-    await this.db.prepare("UPDATE messages SET delivered = 1 WHERE id = ?").bind(id).run()
+    await this.db.update(messages).set({ delivered: true }).where(eq(messages.id, id))
   }
 }

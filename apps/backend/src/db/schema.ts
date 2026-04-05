@@ -1,0 +1,35 @@
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
+
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  telegram_id: integer("telegram_id").unique().notNull(),
+  username: text("username"),
+  display_name: text("display_name"),
+  locale: text("locale", { enum: ["en", "fa", "ru", "de", "fr", "ar"] })
+    .notNull()
+    .default("en"),
+  onboarding_step: integer("onboarding_step").notNull().default(1),
+  created_at: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+})
+
+export const messages = sqliteTable("messages", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  sender_telegram_id: integer("sender_telegram_id").notNull(),
+  recipient_user_id: integer("recipient_user_id")
+    .notNull()
+    .references(() => users.id),
+  content: text("content").notNull(),
+  delivered: integer("delivered", { mode: "boolean" }).notNull().default(false),
+  created_at: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+})
+
+// Inferred types — single source of truth for DB structure and TypeScript types
+export type UserModel = typeof users.$inferSelect
+export type NewUser = typeof users.$inferInsert
+
+export type MessageModel = typeof messages.$inferSelect
+export type NewMessage = typeof messages.$inferInsert

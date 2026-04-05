@@ -1,9 +1,33 @@
 bot:
-  welcome: "Welcome! Share your link to receive anonymous messages."
-  send_message_prompt: "Type your anonymous message below:"
-  message_sent: "Your message has been sent anonymously!"
-  message_received: "You received a new anonymous message:"
+  welcome: "🎉 You're all set, {name}! Welcome to AnonyChatMe."
+  welcome_back: "👋 Welcome back, {name}!"
+  your_link: "🔗 Your anonymous link:"
+  link_hint: "Share this link so people can send you anonymous messages."
+  send_message_prompt: "✍️ Type your anonymous message below:"
+  message_sent: "✅ Your message was sent anonymously!"
+  message_received: "📩 You received a new anonymous message:"
+  no_messages: "📭 No messages yet."
+  sending_to: "📨 Sending an anonymous message. Type it below:"
+
+onboarding:
+  select_locale: "👋 Welcome! Please choose your language:"
+  enter_name: "✏️ What should I call you?\n\nTap your name below or type a custom one:"
+
+menu:
+  receive_messages: "📩 I want to receive messages"
+  send_direct: "📤 Send direct message"
+  received: "📬 Received messages"
+  settings: "⚙️ Settings"
+  help: "❓ Help"
+
+commands:
+  link: "Get your anonymous link to share"
+  send: "Send an anonymous message to someone"
+  inbox: "View your received messages"
+  settings: "Change language and display name"
+  help: "Help and FAQ"
 
 errors:
-  generic: "Something went wrong. Please try again."
-  not_found: "Not found."
+  generic: "❌ Something went wrong. Please try again."
+  not_found: "❌ Not found."
+  user_not_found: "❌ This link is invalid or the user no longer exists."

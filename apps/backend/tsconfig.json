@@ -5,7 +5,9 @@
     "types": ["@cloudflare/workers-types"],
     "lib": ["ESNext"],
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": { "~/*": ["./src/*"] }
   },
   "include": ["src", "test"],
   "exclude": ["scripts"]

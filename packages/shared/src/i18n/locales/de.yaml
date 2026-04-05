@@ -1,0 +1,33 @@
+bot:
+  welcome: "🎉 Alles bereit, {name}! Willkommen bei AnonyChatMe."
+  welcome_back: "👋 Willkommen zurück, {name}!"
+  your_link: "🔗 Dein anonymer Link:"
+  link_hint: "Teile diesen Link, damit andere dir anonyme Nachrichten senden können."
+  send_message_prompt: "✍️ Schreibe deine anonyme Nachricht:"
+  message_sent: "✅ Deine Nachricht wurde anonym gesendet!"
+  message_received: "📩 Du hast eine neue anonyme Nachricht erhalten:"
+  no_messages: "📭 Noch keine Nachrichten."
+  sending_to: "📨 Anonyme Nachricht senden. Schreibe sie unten:"
+
+onboarding:
+  select_locale: "👋 Willkommen! Bitte wähle deine Sprache:"
+  enter_name: "✏️ Wie soll ich dich nennen?\n\nTippe auf deinen Namen oder gib einen anderen ein:"
+
+menu:
+  receive_messages: "📩 Nachrichten empfangen"
+  send_direct: "📤 Direkte Nachricht senden"
+  received: "📬 Eingegangene Nachrichten"
+  settings: "⚙️ Einstellungen"
+  help: "❓ Hilfe"
+
+commands:
+  link: "Deinen anonymen Link erhalten"
+  send: "Eine anonyme Nachricht senden"
+  inbox: "Empfangene Nachrichten anzeigen"
+  settings: "Sprache und Namen ändern"
+  help: "Hilfe und FAQ"
+
+errors:
+  generic: "❌ Etwas ist schiefgelaufen. Bitte versuche es erneut."
+  not_found: "❌ Nicht gefunden."
+  user_not_found: "❌ Dieser Link ist ungültig oder der Benutzer existiert nicht mehr."

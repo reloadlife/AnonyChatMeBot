@@ -1,7 +1,7 @@
 import { getMessages } from "@anonychatmebot/shared"
 import type { Bot } from "grammy"
-import { MessageController } from "../../controllers/message.controller"
-import type { Bindings } from "../../index"
+import { MessageController } from "~/controllers/message.controller"
+import type { Bindings } from "~/index"
 
 export function registerMessageHandler(bot: Bot, env: Bindings) {
   // Handle incoming text messages — treated as anonymous messages to a recipient

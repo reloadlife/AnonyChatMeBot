@@ -1,15 +1,17 @@
-import type { Bindings } from "../index"
-import { MessageRepository } from "../repositories/message.repository"
-import { UserRepository } from "../repositories/user.repository"
-import { serializeMessage } from "../serializers/message.serializer"
+import { createDb } from "~/db/index"
+import type { Bindings } from "~/index"
+import { MessageRepository } from "~/repositories/message.repository"
+import { UserRepository } from "~/repositories/user.repository"
+import { serializeMessage } from "~/serializers/message.serializer"
 
 export class MessageController {
   private readonly messageRepo: MessageRepository
   private readonly userRepo: UserRepository
 
   constructor(private readonly env: Bindings) {
-    this.messageRepo = new MessageRepository(env.DB)
-    this.userRepo = new UserRepository(env.DB)
+    const db = createDb(env.DB)
+    this.messageRepo = new MessageRepository(db)
+    this.userRepo = new UserRepository(db)
   }
 
   async sendAnonymousMessage(senderTelegramId: number, recipientUserId: number, content: string) {
@@ -20,10 +22,8 @@ export class MessageController {
       sender_telegram_id: senderTelegramId,
       recipient_user_id: recipientUserId,
       content,
-      delivered: 0,
     })
 
-    // Enqueue delivery job
     await this.env.MESSAGE_QUEUE.send({ messageId: message.id })
 
     return serializeMessage(message)

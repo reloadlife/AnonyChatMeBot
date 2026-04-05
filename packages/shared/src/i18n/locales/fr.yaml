@@ -1,0 +1,33 @@
+bot:
+  welcome: "🎉 Tout est prêt, {name} ! Bienvenue sur AnonyChatMe."
+  welcome_back: "👋 Bon retour, {name} !"
+  your_link: "🔗 Votre lien anonyme :"
+  link_hint: "Partagez ce lien pour recevoir des messages anonymes."
+  send_message_prompt: "✍️ Tapez votre message anonyme :"
+  message_sent: "✅ Votre message a été envoyé anonymement !"
+  message_received: "📩 Vous avez reçu un nouveau message anonyme :"
+  no_messages: "📭 Pas encore de messages."
+  sending_to: "📨 Envoi d'un message anonyme. Tapez-le ci-dessous :"
+
+onboarding:
+  select_locale: "👋 Bienvenue ! Veuillez choisir votre langue :"
+  enter_name: "✏️ Comment dois-je vous appeler ?\n\nAppuyez sur votre nom ci-dessous ou tapez-en un autre :"
+
+menu:
+  receive_messages: "📩 Recevoir des messages"
+  send_direct: "📤 Envoyer un message direct"
+  received: "📬 Messages reçus"
+  settings: "⚙️ Paramètres"
+  help: "❓ Aide"
+
+commands:
+  link: "Obtenir votre lien anonyme"
+  send: "Envoyer un message anonyme"
+  inbox: "Voir vos messages reçus"
+  settings: "Changer de langue et de nom"
+  help: "Aide et FAQ"
+
+errors:
+  generic: "❌ Une erreur s'est produite. Veuillez réessayer."
+  not_found: "❌ Non trouvé."
+  user_not_found: "❌ Ce lien est invalide ou l'utilisateur n'existe plus."

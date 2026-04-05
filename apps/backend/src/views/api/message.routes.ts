@@ -1,6 +1,6 @@
 import { Hono } from "hono"
-import { MessageController } from "../../controllers/message.controller"
-import type { Bindings } from "../../index"
+import { MessageController } from "~/controllers/message.controller"
+import type { Bindings } from "~/index"
 
 export const messageRoutes = new Hono<{ Bindings: Bindings }>()
 

@@ -1,4 +1,4 @@
-import type { MessageModel } from "../models/message.model"
+import type { MessageModel } from "~/db/schema"
 
 export interface SerializedMessage {
   id: number
@@ -11,11 +11,7 @@ export function serializeMessage(message: MessageModel): SerializedMessage {
   return {
     id: message.id,
     content: message.content,
-    delivered: message.delivered === 1,
+    delivered: message.delivered,
     createdAt: message.created_at,
   }
-}
-
-export function serializeMessages(messages: MessageModel[]): SerializedMessage[] {
-  return messages.map(serializeMessage)
 }

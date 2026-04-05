@@ -1,24 +1,21 @@
 /**
- * Dev-only: runs grammY in long-polling mode.
+ * Dev-only: polls Telegram and forwards each update as an HTTP POST
+ * to the local wrangler dev server, exactly as production webhooks work.
  *
- * WHY THIS EXISTS:
- * Cloudflare Workers are stateless request handlers — they can't run a
- * persistent polling loop like bot.start(). In production, Telegram calls
- * our webhook endpoint instead. For local dev, we run this Bun script
- * alongside `wrangler dev` to receive updates via long-polling.
+ * Also syncs bot commands with Telegram on startup (same logic as /setup).
  *
- * The bot logic runs in-process here; DB calls go to wrangler's local D1
- * (SQLite) via the Workers dev server. For simplicity, this script uses
- * the same createBot() factory with a mock env that points to wrangler dev.
- *
- * Usage:
- *   Terminal 1: bun run dev          (starts wrangler dev)
- *   Terminal 2: bun run dev:bot      (starts this script)
+ * Usage (from repo root):
+ *   Terminal 1: bun run dev:backend   (starts wrangler dev on :8787)
+ *   Terminal 2: bun run dev:bot       (starts this forwarding script)
  */
 
 import { Bot } from "grammy"
+import { syncBotCommands } from "../src/bot/setup"
 
-// Load secrets from .dev.vars manually (wrangler doesn't inject them here)
+const WEBHOOK_URL = "http://localhost:8787/webhook"
+const POLL_TIMEOUT = 30 // seconds
+
+// Load secrets from .dev.vars (wrangler doesn't inject them into this process)
 const { readFileSync } = await import("node:fs")
 const devVarsPath = new URL("../.dev.vars", import.meta.url)
 try {
@@ -40,23 +37,54 @@ const token = process.env.BOT_TOKEN
 if (!token)
   throw new Error("BOT_TOKEN is required. Copy .dev.vars.example to .dev.vars and fill it in.")
 
-// In dev, bot logic runs in-process with a stub env.
-// Real DB/storage calls require wrangler dev to be running on localhost:8787.
-const bot = new Bot(token)
+// Sync commands before starting the poll loop
+console.log("[dev-bot] Syncing bot commands...")
+const setupBot = new Bot(token)
+await syncBotCommands(setupBot.api)
 
-bot.command("start", async (ctx) => {
-  await ctx.reply("👋 Dev mode: bot is running via long-polling!")
-})
+const telegramApi = `https://api.telegram.org/bot${token}`
 
-bot.on("message:text", async (ctx) => {
-  // Forward to wrangler dev server for full worker logic (optional)
-  // await fetch("http://localhost:8787/webhook", { ... })
-  await ctx.reply(`[dev echo] ${ctx.message.text}`)
-})
+async function deleteWebhook() {
+  const res = await fetch(`${telegramApi}/deleteWebhook`)
+  const data = (await res.json()) as { ok: boolean }
+  if (!data.ok) throw new Error("Failed to delete webhook — is the token valid?")
+}
 
-bot.catch((err) => console.error("Bot error:", err))
+async function getUpdates(offset: number): Promise<{ update_id: number }[]> {
+  const res = await fetch(
+    `${telegramApi}/getUpdates?offset=${offset}&timeout=${POLL_TIMEOUT}&allowed_updates=[]`,
+  )
+  const data = (await res.json()) as { ok: boolean; result: { update_id: number }[] }
+  if (!data.ok) throw new Error(`getUpdates failed: ${JSON.stringify(data)}`)
+  return data.result
+}
 
-console.log("🤖 Starting bot in long-polling mode (dev)...")
-await bot.start({
-  onStart: (info) => console.log(`✅ Bot @${info.username} started`),
-})
+async function forwardUpdate(update: unknown): Promise<void> {
+  const res = await fetch(WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(update),
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    console.error(`[dev-bot] Worker returned ${res.status}: ${body}`)
+  }
+}
+
+console.log("[dev-bot] Clearing any existing webhook...")
+await deleteWebhook()
+console.log(`[dev-bot] Forwarding updates to ${WEBHOOK_URL}`)
+
+let offset = 0
+while (true) {
+  try {
+    const updates = await getUpdates(offset)
+    for (const update of updates) {
+      await forwardUpdate(update)
+      offset = update.update_id + 1
+    }
+  } catch (err) {
+    console.error("[dev-bot] Poll error:", err)
+    await new Promise((r) => setTimeout(r, 2000))
+  }
+}

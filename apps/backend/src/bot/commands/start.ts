@@ -1,23 +1,73 @@
-import { getMessages } from "@anonychatmebot/shared"
+import { getMessages, type Locale, resolveLocale, t } from "@anonychatmebot/shared"
 import type { Bot } from "grammy"
-import type { Bindings } from "../../index"
-import { UserRepository } from "../../repositories/user.repository"
+import { createDb } from "~/db/index"
+import type { Bindings } from "~/index"
+import { UserRepository } from "~/repositories/user.repository"
+import { StateService } from "~/services/state.service"
+import { buildMainMenuKeyboard } from "~/views/telegram/main-menu.view"
+import { buildLocaleSelector, buildNameRequestKeyboard } from "~/views/telegram/onboarding.view"
 
 export function registerStartCommand(bot: Bot, env: Bindings) {
   bot.command("start", async (ctx) => {
-    const userRepo = new UserRepository(env.DB)
     const from = ctx.from
     if (!from) return
 
-    // Upsert user on /start
-    await userRepo.upsert({
+    const userRepo = new UserRepository(createDb(env.DB))
+    const stateService = new StateService(env.STATE_KV)
+
+    const user = await userRepo.upsert({
       telegram_id: from.id,
       username: from.username ?? null,
-      locale: "en", // TODO: detect from ctx.from.language_code
     })
 
-    const t = getMessages("en")
-    const link = `https://t.me/${ctx.me.username}?start=${from.id}`
-    await ctx.reply(`${t.bot.welcome}\n\n🔗 ${link}`)
+    const state = await stateService.get(from.id, user)
+
+    if (state.name === "onboarding_locale") {
+      const messages = getMessages(resolveLocale(from.language_code))
+      await ctx.reply(messages.onboarding.select_locale, {
+        reply_markup: buildLocaleSelector(),
+      })
+      return
+    }
+
+    if (state.name === "onboarding_name") {
+      const messages = getMessages(user.locale as Locale)
+      await ctx.reply(messages.onboarding.enter_name, {
+        reply_markup: buildNameRequestKeyboard(from.first_name || from.username || "..."),
+      })
+      return
+    }
+
+    // state === "idle" or "sending_message" (re-anchoring the user to the menu)
+    const messages = getMessages(user.locale as Locale)
+
+    // Deep-link payload: /start <recipientId> — route to anonymous message flow
+    const payload = ctx.match?.trim()
+    if (payload) {
+      const recipientId = Number(payload)
+      if (!Number.isNaN(recipientId) && recipientId !== user.id) {
+        const recipient = await userRepo.findById(recipientId)
+        if (!recipient) {
+          await ctx.reply(messages.errors.user_not_found)
+          return
+        }
+        await stateService.set(from.id, {
+          name: "sending_message",
+          recipientId: recipient.id,
+          recipientName: recipient.display_name || recipient.username || "someone",
+        })
+        await ctx.reply(messages.bot.sending_to, {
+          reply_markup: { force_reply: true, selective: true },
+        })
+        return
+      }
+    }
+
+    // Default: reset any stale active state and show the main menu
+    await stateService.reset(from.id)
+    const name = user.display_name || from.first_name || "there"
+    await ctx.reply(t(messages.bot.welcome_back, { name }), {
+      reply_markup: buildMainMenuKeyboard(messages),
+    })
   })
 }

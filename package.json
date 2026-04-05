@@ -16,7 +16,11 @@
     "test": "turbo run test",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:generate": "turbo run db:generate --filter=@anonychatmebot/backend",
+    "db:migrate": "turbo run db:migrate --filter=@anonychatmebot/backend",
+    "db:migrate:prod": "turbo run db:migrate:prod --filter=@anonychatmebot/backend",
+    "db:studio": "turbo run db:studio --filter=@anonychatmebot/backend"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",

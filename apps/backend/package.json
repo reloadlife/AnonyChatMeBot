@@ -8,17 +8,23 @@
     "dev:bot": "bun run scripts/dev-bot.ts",
     "deploy": "wrangler deploy",
     "test": "bun test",
-    "build": "wrangler deploy --dry-run"
+    "build": "wrangler deploy --dry-run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 migrations apply anonychatmebot-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply anonychatmebot-db --remote",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "hono": "^4.6.0",
-    "grammy": "^1.31.0",
+    "@anonychatmebot/shared": "workspace:*",
     "ai": "^6.0.146",
-    "@anonychatmebot/shared": "workspace:*"
+    "drizzle-orm": "^0.45.2",
+    "grammy": "^1.31.0",
+    "hono": "^4.6.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241205.0",
     "@types/node": "^25.5.2",
+    "drizzle-kit": "^0.31.10",
     "wrangler": "^4.0.0"
   }
 }
