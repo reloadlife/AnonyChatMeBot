@@ -31,9 +31,13 @@ export function registerOnboardingHandlers(bot: Bot, env: Bindings) {
         reply_markup: buildMainMenuKeyboard(messages),
       })
     } else {
-      // Onboarding context: persist locale + advance to name step
+      // Onboarding context: persist locale + advance to name step, carrying pendingRecipientId
+      const currentState = await stateService.get(ctx.from.id, user)
+      const pendingRecipientId =
+        currentState.name === "onboarding_locale" ? currentState.pendingRecipientId : undefined
+
       await userRepo.setLocale(user.id, locale)
-      await stateService.transition(ctx.from.id, { name: "onboarding_name" })
+      await stateService.set(ctx.from.id, { name: "onboarding_name", pendingRecipientId })
       await ctx.reply(messages.onboarding.enter_name, {
         reply_markup: buildNameRequestKeyboard(ctx.from.first_name || ctx.from.username || "..."),
       })
@@ -53,11 +57,30 @@ export function registerOnboardingHandlers(bot: Bot, env: Bindings) {
     if (state.name !== "onboarding_name" || !user) return next()
 
     const displayName = ctx.message.text.trim()
+    const pendingRecipientId = state.pendingRecipientId
 
     await userRepo.completeOnboarding(user.id, displayName)
-    await stateService.reset(ctx.from.id)
 
     const messages = getMessages((user.locale ?? "en") as Locale)
+
+    // If the user arrived via a deep link, redirect straight to the send flow
+    if (pendingRecipientId !== undefined) {
+      const recipient = await userRepo.findById(pendingRecipientId)
+      if (recipient) {
+        await stateService.set(ctx.from.id, {
+          name: "sending_message",
+          recipientId: recipient.id,
+          recipientName: recipient.display_name || recipient.username || "someone",
+        })
+        await ctx.reply(t(messages.bot.welcome, { name: displayName }), {
+          reply_markup: buildMainMenuKeyboard(messages),
+        })
+        await ctx.reply(messages.bot.sending_to)
+        return
+      }
+    }
+
+    await stateService.reset(ctx.from.id)
     await ctx.reply(t(messages.bot.welcome, { name: displayName }), {
       reply_markup: buildMainMenuKeyboard(messages),
     })

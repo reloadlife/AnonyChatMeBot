@@ -11,8 +11,8 @@
  */
 export type BotState =
   | { name: "idle" }
-  | { name: "onboarding_locale" }
-  | { name: "onboarding_name" }
+  | { name: "onboarding_locale"; pendingRecipientId?: number }
+  | { name: "onboarding_name"; pendingRecipientId?: number }
   | { name: "asking_recipient" }
   | { name: "sending_message"; recipientId: number; recipientName: string }
 

@@ -23,8 +23,16 @@ export function registerStartCommand(bot: Bot, env: Bindings) {
 
     const state = await stateService.get(from.id, user)
 
+    // Decode deep-link payload early so it can be threaded through onboarding
+    const payload = ctx.match?.trim()
+    const pendingRecipientId = payload ? (decodeId(env.LINK_SALT, payload) ?? undefined) : undefined
+
     if (state.name === "onboarding_locale") {
       const messages = getMessages(resolveLocale(from.language_code))
+      // Carry the pending recipient through so onboarding can redirect after completion
+      if (pendingRecipientId) {
+        await stateService.set(from.id, { name: "onboarding_locale", pendingRecipientId })
+      }
       await ctx.reply(messages.onboarding.select_locale, {
         reply_markup: buildLocaleSelector(),
       })
@@ -39,29 +47,23 @@ export function registerStartCommand(bot: Bot, env: Bindings) {
       return
     }
 
-    // state === "idle" or "sending_message" (re-anchoring the user to the menu)
+    // state === "idle" or any active state — re-anchor via the payload or show menu
     const messages = getMessages(user.locale as Locale)
 
-    // Deep-link payload: /start <hash> — decode hashid and route to anonymous message flow
-    const payload = ctx.match?.trim()
-    if (payload) {
-      const recipientId = decodeId(env.LINK_SALT, payload)
-      if (recipientId !== null && recipientId !== user.id) {
-        const recipient = await userRepo.findById(recipientId)
-        if (!recipient) {
-          await ctx.reply(messages.errors.user_not_found)
-          return
-        }
-        await stateService.set(from.id, {
-          name: "sending_message",
-          recipientId: recipient.id,
-          recipientName: recipient.display_name || recipient.username || "someone",
-        })
-        await ctx.reply(messages.bot.sending_to, {
-          reply_markup: { force_reply: true, selective: true },
-        })
+    // Deep-link: decode and immediately start the send flow
+    if (pendingRecipientId !== undefined && pendingRecipientId !== user.id) {
+      const recipient = await userRepo.findById(pendingRecipientId)
+      if (!recipient) {
+        await ctx.reply(messages.errors.user_not_found)
         return
       }
+      await stateService.set(from.id, {
+        name: "sending_message",
+        recipientId: recipient.id,
+        recipientName: recipient.display_name || recipient.username || "someone",
+      })
+      await ctx.reply(messages.bot.sending_to)
+      return
     }
 
     // Default: reset any stale active state and show the main menu
