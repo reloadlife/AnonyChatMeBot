@@ -36,16 +36,15 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
     await ctx.answerCallbackQuery()
 
     // Show content with action buttons — sent as reply to the notification message
-    const sent = await ctx.reply(escapeMarkdownV2(message.content), {
+    await ctx.reply(escapeMarkdownV2(message.content), {
       parse_mode: "MarkdownV2",
       reply_markup: buildMessageKeyboard(msgs, messageId),
       reply_parameters: { message_id: ctx.callbackQuery.message?.message_id ?? 0 },
     })
 
-    // Mark read and notify sender
+    // Mark read and notify sender (only once)
     if (!message.read_at) {
       await messageRepo.markRead(messageId)
-      // Notify the original sender
       const api = new Api(env.BOT_TOKEN)
       const sender = await userRepo.findByTelegramId(message.sender_telegram_id)
       if (sender) {
@@ -55,9 +54,9 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
         })
       }
     }
-
-    // Store the view message ID so replies can thread under it
-    await messageRepo.setNotificationMessageId(messageId, sent.message_id)
+    // Note: notification_message_id is intentionally NOT overwritten here.
+    // It was set by the queue worker to point to the original notification bubble.
+    // The reply flow captures viewMessageId directly from ctx.callbackQuery.message_id.
   })
 
   // ── Reply button ────────────────────────────────────────────────────────

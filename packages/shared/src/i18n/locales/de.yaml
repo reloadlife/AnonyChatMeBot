@@ -28,6 +28,7 @@ bot:
   inbox_unread: "{n} ungelesen"
   rate_limited: "⏳ *Langsamer\\!* Bitte warte einen Moment vor der nächsten Nachricht\\."
   message_too_long: "❌ *Nachricht zu lang* \\— maximal *{max}* Zeichen\\."
+  name_invalid: "❌ *Ungültiger Name\\.* Bitte 1 bis 64 Zeichen verwenden\\."
 
 onboarding:
   select_locale: "👋 *Willkommen bei AnonyChatMe\\!*\nBitte wähle deine Sprache:"

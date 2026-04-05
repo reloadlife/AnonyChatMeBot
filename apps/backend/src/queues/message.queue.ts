@@ -51,15 +51,25 @@ export async function handleMessageQueue(
     // Send notification without content — recipient must tap to view (preserves privacy)
     const keyboard = new InlineKeyboard().text(messages.actions.view, `view_msg:${messageId}`)
 
-    // Let Telegram API errors propagate — Cloudflare Queue will retry the message automatically
-    const sent = await api.sendMessage(recipientTelegramId, messages.bot.new_message_notification, {
-      parse_mode: "MarkdownV2",
-      reply_markup: keyboard,
-    })
+    try {
+      const sent = await api.sendMessage(recipientTelegramId, messages.bot.new_message_notification, {
+        parse_mode: "MarkdownV2",
+        reply_markup: keyboard,
+      })
 
-    await messageRepo.markDelivered(messageId)
-    await messageRepo.setNotificationMessageId(messageId, sent.message_id)
+      // Both writes before ack — if they fail the message retries (idempotent on re-delivery)
+      await messageRepo.setNotificationMessageId(messageId, sent.message_id)
+      await messageRepo.markDelivered(messageId)
 
-    msg.ack()
+      msg.ack()
+    } catch (err) {
+      const status = (err as { error_code?: number }).error_code
+      // 403 = bot blocked by user, 400 = chat not found — permanent failures, don't retry
+      if (status === 403 || status === 400) {
+        await messageRepo.markDelivered(messageId)
+        msg.ack()
+      }
+      // All other errors (429, 5xx, network) — do NOT ack so the queue retries automatically
+    }
   }
 }

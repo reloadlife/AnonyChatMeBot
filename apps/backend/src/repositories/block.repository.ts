@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm"
 import type { Db } from "~/db/index"
-import { blocks, type BlockModel } from "~/db/schema"
+import { type BlockModel, blocks } from "~/db/schema"
 
 export class BlockRepository {
   constructor(private readonly db: Db) {}
@@ -27,11 +27,7 @@ export class BlockRepository {
   }
 
   async list(blockerUserId: number): Promise<BlockModel[]> {
-    return this.db
-      .select()
-      .from(blocks)
-      .where(eq(blocks.blocker_user_id, blockerUserId))
-      .all()
+    return this.db.select().from(blocks).where(eq(blocks.blocker_user_id, blockerUserId)).all()
   }
 
   async unblock(blockerUserId: number, senderTelegramId: number): Promise<void> {

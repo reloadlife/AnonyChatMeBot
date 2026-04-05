@@ -28,6 +28,7 @@ bot:
   inbox_unread: "{n} unread"
   rate_limited: "⏳ *Slow down\\!* Please wait a moment before sending another message\\."
   message_too_long: "❌ *Message too long* \\— max *{max}* characters\\."
+  name_invalid: "❌ *Invalid name\\.* Please use between 1 and 64 characters\\."
 
 onboarding:
   select_locale: "👋 *Welcome to AnonyChatMe\\!*\nPlease choose your language:"

@@ -21,7 +21,7 @@ setupRouter.post("/", async (c) => {
   const { protocol, host } = new URL(c.req.url)
   const webhookUrl = `${protocol}//${host}/webhook`
 
-  await bot.api.setWebhook(webhookUrl)
+  await bot.api.setWebhook(webhookUrl, { secret_token: c.env.WEBHOOK_SECRET })
 
   await syncBotCommands(bot.api)
 

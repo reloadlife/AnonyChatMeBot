@@ -1,4 +1,4 @@
-import { t, type I18nMessages } from "@anonychatmebot/shared"
+import { type I18nMessages, t } from "@anonychatmebot/shared"
 import { InlineKeyboard } from "grammy"
 
 export function buildSettingsKeyboard(

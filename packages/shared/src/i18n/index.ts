@@ -38,6 +38,7 @@ export interface I18nMessages {
     inbox_unread: string
     rate_limited: string
     message_too_long: string
+    name_invalid: string
   }
   actions: {
     view: string

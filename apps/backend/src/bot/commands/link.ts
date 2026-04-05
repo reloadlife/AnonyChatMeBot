@@ -13,6 +13,11 @@ export function registerLinkCommand(bot: Bot, env: Bindings) {
     if (!user) return
     const messages = getMessages((user.locale as Locale) ?? "en")
 
+    if (!ctx.me.username) {
+      await ctx.reply(messages.errors.generic, { parse_mode: "MarkdownV2" })
+      return
+    }
+
     const hash = encodeId(env.LINK_SALT, user.id)
     const link = `https://t.me/${ctx.me.username}?start=${hash}`
     await ctx.reply(`${messages.bot.your_link}\n\`${link}\`\n\n${messages.bot.link_hint}`, {

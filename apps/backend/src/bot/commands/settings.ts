@@ -15,9 +15,7 @@ export function registerSettingsCommand(bot: Bot, env: Bindings) {
     const db = createDb(env.DB)
     const user = await new UserRepository(db).findByTelegramId(ctx.from.id)
     const messages = getMessages((user?.locale as Locale) ?? "en")
-    const blockedCount = user
-      ? (await new BlockRepository(db).list(user.id)).length
-      : 0
+    const blockedCount = user ? (await new BlockRepository(db).list(user.id)).length : 0
 
     await ctx.reply(messages.settings.title, {
       parse_mode: "MarkdownV2",

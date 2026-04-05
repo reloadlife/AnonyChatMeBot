@@ -63,28 +63,33 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
       const { senderTelegramId, viewMessageId } = state
       const sender = await userRepo.findByTelegramId(senderTelegramId)
 
-      if (sender) {
-        const controller = new MessageController(env)
-        try {
-          await controller.sendAnonymousMessage(
-            from.id,
-            sender.id,
-            sender.telegram_id,
-            sender.locale,
-            ctx.message.text,
+      if (!sender) {
+        // Original sender's account no longer exists — cancel gracefully
+        await stateService.reset(from.id)
+        await ctx.reply(messages.errors.user_not_found, { parse_mode: "MarkdownV2" })
+        return
+      }
+
+      const controller = new MessageController(env)
+      try {
+        await controller.sendAnonymousMessage(
+          from.id,
+          sender.id,
+          sender.telegram_id,
+          sender.locale,
+          ctx.message.text,
+        )
+      } catch (err) {
+        if ((err as Error).message === "MESSAGE_TOO_LONG") {
+          await ctx.reply(
+            t(messages.bot.message_too_long, {
+              max: String(MessageController.MAX_MESSAGE_LENGTH),
+            }),
+            { parse_mode: "MarkdownV2" },
           )
-        } catch (err) {
-          if ((err as Error).message === "MESSAGE_TOO_LONG") {
-            await ctx.reply(
-              t(messages.bot.message_too_long, {
-                max: String(MessageController.MAX_MESSAGE_LENGTH),
-              }),
-              { parse_mode: "MarkdownV2" },
-            )
-            return
-          }
-          throw err
+          return
         }
+        throw err
       }
 
       await stateService.reset(from.id)

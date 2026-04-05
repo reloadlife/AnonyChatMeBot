@@ -25,6 +25,11 @@ export function registerOnboardingHandlers(bot: Bot, env: Bindings) {
     await ctx.editMessageText(`${chosen?.flag ?? ""} ${chosen?.label ?? locale} ✅`)
 
     if (user.onboarding_step === 0) {
+      // Only update locale when user is idle — avoid corrupting an active sending flow
+      const currentState = await stateService.get(ctx.from.id, user)
+      if (currentState.name !== "idle") {
+        await stateService.reset(ctx.from.id)
+      }
       await userRepo.updateLocale(user.id, locale)
       await ctx.reply(messages.settings.language_updated)
     } else {
@@ -52,11 +57,18 @@ export function registerOnboardingHandlers(bot: Bot, env: Bindings) {
     if (state.name !== "onboarding_name" || !user) return next()
 
     const displayName = ctx.message.text.trim()
+
+    const messages = getMessages((user.locale ?? "en") as Locale)
+
+    if (displayName.length === 0 || displayName.length > 64) {
+      await ctx.reply(messages.bot.name_invalid, { parse_mode: "MarkdownV2" })
+      return
+    }
+
     const pendingRecipientId = state.pendingRecipientId
 
     await userRepo.completeOnboarding(user.id, displayName)
 
-    const messages = getMessages((user.locale ?? "en") as Locale)
     const escapedName = escapeMarkdownV2(displayName)
 
     if (pendingRecipientId !== undefined) {

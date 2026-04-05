@@ -10,8 +10,10 @@ export type Bindings = {
   STATE_KV: KVNamespace
   BOT_TOKEN: string
   WEBHOOK_SECRET: string
+  API_SECRET: string
   LINK_SALT: string
   ENVIRONMENT: string
+  FRONTEND_URL: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -20,7 +22,9 @@ app.get("/", (c) => c.json({ status: "ok", service: "AnonyChatMeBot" }))
 
 app.post("/webhook", async (c) => {
   const bot = await getOrInitBot(c.env.BOT_TOKEN, c.env)
-  const handler = webhookCallback(bot, "cloudflare-mod")
+  const handler = webhookCallback(bot, "cloudflare-mod", {
+    secretToken: c.env.WEBHOOK_SECRET,
+  })
   return handler(c.req.raw)
 })
 

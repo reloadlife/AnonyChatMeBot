@@ -21,3 +21,14 @@ export const injectServices: MiddlewareHandler<AppEnv> = async (c, next) => {
   c.set("stateService", new StateService(c.env.STATE_KV))
   await next()
 }
+
+/**
+ * Requires a valid X-API-Secret header on all protected API routes.
+ * Returns 401 if missing or incorrect.
+ */
+export const requireApiSecret: MiddlewareHandler<AppEnv> = async (c, next) => {
+  if (c.req.header("X-API-Secret") !== c.env.API_SECRET) {
+    return c.json({ error: "Unauthorized" }, 401)
+  }
+  await next()
+}

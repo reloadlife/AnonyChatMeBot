@@ -39,10 +39,7 @@
       "indexes": {
         "blocks_unique": {
           "name": "blocks_unique",
-          "columns": [
-            "blocker_user_id",
-            "sender_telegram_id"
-          ],
+          "columns": ["blocker_user_id", "sender_telegram_id"],
           "isUnique": true
         }
       },
@@ -51,12 +48,8 @@
           "name": "blocks_blocker_user_id_users_id_fk",
           "tableFrom": "blocks",
           "tableTo": "users",
-          "columnsFrom": [
-            "blocker_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["blocker_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -139,12 +132,8 @@
           "name": "messages_recipient_user_id_users_id_fk",
           "tableFrom": "messages",
           "tableTo": "users",
-          "columnsFrom": [
-            "recipient_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["recipient_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -188,10 +177,7 @@
       "indexes": {
         "reports_unique": {
           "name": "reports_unique",
-          "columns": [
-            "message_id",
-            "reporter_user_id"
-          ],
+          "columns": ["message_id", "reporter_user_id"],
           "isUnique": true
         }
       },
@@ -200,12 +186,8 @@
           "name": "reports_message_id_messages_id_fk",
           "tableFrom": "reports",
           "tableTo": "messages",
-          "columnsFrom": [
-            "message_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["message_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -213,12 +195,8 @@
           "name": "reports_reporter_user_id_users_id_fk",
           "tableFrom": "reports",
           "tableTo": "users",
-          "columnsFrom": [
-            "reporter_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reporter_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -293,9 +271,7 @@
       "indexes": {
         "users_telegram_id_unique": {
           "name": "users_telegram_id_unique",
-          "columns": [
-            "telegram_id"
-          ],
+          "columns": ["telegram_id"],
           "isUnique": true
         }
       },
