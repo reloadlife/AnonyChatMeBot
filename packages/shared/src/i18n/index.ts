@@ -42,6 +42,7 @@ export interface I18nMessages {
     stats: string
     admin_no_reports: string
     admin_report_item: string
+    media_type_not_allowed: string
   }
   actions: {
     view: string
@@ -91,6 +92,17 @@ export interface I18nMessages {
     blocked_senders: string
     no_blocked: string
     unblocked: string
+    media_types: string
+    media_settings_title: string
+    media_photo: string
+    media_video: string
+    media_voice: string
+    media_audio: string
+    media_document: string
+    media_sticker: string
+    media_animation: string
+    media_updated: string
+    back: string
   }
   help: {
     text: string

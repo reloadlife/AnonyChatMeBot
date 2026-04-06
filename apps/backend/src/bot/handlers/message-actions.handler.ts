@@ -28,13 +28,20 @@ async function sendMedia(
 ) {
   const opts = { protect_content: true, caption: caption || undefined } as const
   switch (mediaType) {
-    case "photo": return api.sendPhoto(chatId, fileId, opts)
-    case "video": return api.sendVideo(chatId, fileId, opts)
-    case "voice": return api.sendVoice(chatId, fileId, opts)
-    case "audio": return api.sendAudio(chatId, fileId, opts)
-    case "document": return api.sendDocument(chatId, fileId, opts)
-    case "sticker": return api.sendSticker(chatId, fileId, { protect_content: true })
-    case "animation": return api.sendAnimation(chatId, fileId, opts)
+    case "photo":
+      return api.sendPhoto(chatId, fileId, opts)
+    case "video":
+      return api.sendVideo(chatId, fileId, opts)
+    case "voice":
+      return api.sendVoice(chatId, fileId, opts)
+    case "audio":
+      return api.sendAudio(chatId, fileId, opts)
+    case "document":
+      return api.sendDocument(chatId, fileId, opts)
+    case "sticker":
+      return api.sendSticker(chatId, fileId, { protect_content: true })
+    case "animation":
+      return api.sendAnimation(chatId, fileId, opts)
   }
 }
 
@@ -135,13 +142,10 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
         ? `${message.content.slice(0, 80)}…`
         : message.content
 
-    await ctx.reply(
-      t(msgs.bot.reply_prompt, {}) + `\n\n> _${escapeMarkdownV2(preview)}_`,
-      {
-        parse_mode: "MarkdownV2",
-        reply_parameters: { message_id: viewMessageId },
-      },
-    )
+    await ctx.reply(t(msgs.bot.reply_prompt, {}) + `\n\n> _${escapeMarkdownV2(preview)}_`, {
+      parse_mode: "MarkdownV2",
+      reply_parameters: { message_id: viewMessageId },
+    })
   })
 
   // ── Block button ──────────────────────────────────────────────────────────

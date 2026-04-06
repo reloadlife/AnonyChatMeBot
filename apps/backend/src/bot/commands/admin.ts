@@ -6,8 +6,7 @@ import { MessageRepository } from "~/repositories/message.repository"
 import { ReportRepository } from "~/repositories/report.repository"
 
 export function registerAdminCommand(bot: Bot, env: Bindings) {
-  const isAdmin = (ctx: Context) =>
-    ctx.from && String(ctx.from.id) === env.ADMIN_TELEGRAM_ID
+  const isAdmin = (ctx: Context) => ctx.from && String(ctx.from.id) === env.ADMIN_TELEGRAM_ID
 
   bot.command("admin", async (ctx) => {
     if (!isAdmin(ctx)) return
@@ -31,10 +30,9 @@ export function registerAdminCommand(bot: Bot, env: Bindings) {
         ? escapeMarkdownV2(message.content.slice(0, 200))
         : `\\[${message?.media_type ?? "unknown"}\\]`
 
-      await ctx.reply(
-        t(msgs.bot.admin_report_item, { n: String(i + 1), content }),
-        { parse_mode: "MarkdownV2" },
-      )
+      await ctx.reply(t(msgs.bot.admin_report_item, { n: String(i + 1), content }), {
+        parse_mode: "MarkdownV2",
+      })
     }
   })
 

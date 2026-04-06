@@ -49,6 +49,10 @@ export class UserRepository {
     await this.db.update(users).set({ receiving_messages: receiving }).where(eq(users.id, id))
   }
 
+  async setAllowedMediaTypes(id: number, allowedJson: string | null): Promise<void> {
+    await this.db.update(users).set({ allowed_media_types: allowedJson }).where(eq(users.id, id))
+  }
+
   /** Step 2 complete: save display name, mark onboarding done. */
   async completeOnboarding(id: number, displayName: string): Promise<void> {
     await this.db

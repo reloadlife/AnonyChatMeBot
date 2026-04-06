@@ -38,10 +38,22 @@ function App() {
 
       <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {[
-          ["Truly Anonymous", "Your senders are never identified. No Telegram ID, no username — just messages."],
-          ["Secure Delivery", "Messages travel through Cloudflare Workers with queue-based delivery and retry logic."],
-          ["Media Support", "Receive photos, videos, voice notes, documents, and more — not just text."],
-          ["Block & Report", "Full control: block senders, report abuse, and delete messages you don't want."],
+          [
+            "Truly Anonymous",
+            "Your senders are never identified. No Telegram ID, no username — just messages.",
+          ],
+          [
+            "Secure Delivery",
+            "Messages travel through Cloudflare Workers with queue-based delivery and retry logic.",
+          ],
+          [
+            "Media Support",
+            "Receive photos, videos, voice notes, documents, and more — not just text.",
+          ],
+          [
+            "Block & Report",
+            "Full control: block senders, report abuse, and delete messages you don't want.",
+          ],
           ["Multilingual", "Available in English, Persian, Russian, German, French, and Arabic."],
           ["Open Source", "Fully open source and self-hostable. Build on it, fork it, own it."],
         ].map(([title, desc], index) => (

@@ -32,6 +32,7 @@ bot:
   stats: "📊 *Tes statistiques*\n\n📩 Reçus: *{received}*\n📭 Non lus: *{unread}*\n📤 Envoyés: *{sent}*"
   admin_no_reports: "✅ Aucun signalement en attente\\."
   admin_report_item: "🚩 *Signalement \\#{n}*\nMessage: `{content}`"
+  media_type_not_allowed: "❌ *Cet utilisateur n'accepte pas ce type de média\\.*"
 
 onboarding:
   select_locale: "👋 *Bienvenue sur AnonyChatMe\\!*\nVeuillez choisir votre langue :"
@@ -82,6 +83,17 @@ settings:
   blocked_senders: "🚫 Bloqués \\({n}\\)"
   no_blocked: "📭 *Aucun expéditeur bloqué\\.* Vous n'avez bloqué personne\\."
   unblocked: "✅ Débloqué."
+  media_types: "🎞 Types de médias"
+  media_settings_title: "🎞 *Paramètres des types de médias*\n\nChoisissez les types de médias que vous acceptez :"
+  media_photo: "Photos"
+  media_video: "Vidéos"
+  media_voice: "Vocaux"
+  media_audio: "Audio"
+  media_document: "Fichiers"
+  media_sticker: "Stickers"
+  media_animation: "GIFs"
+  media_updated: "Mis à jour !"
+  back: "◀ Retour"
 
 help:
   text: |

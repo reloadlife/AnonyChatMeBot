@@ -19,14 +19,10 @@ export function registerInlineHandler(bot: Bot, env: Bindings) {
     const hash = encodeId(env.LINK_SALT, user.id)
     const link = `https://t.me/${ctx.me.username}?start=${hash}`
 
-    const result = InlineQueryResultBuilder.article(
-      `link:${user.id}`,
-      msgs.menu.receive_messages,
-      {
-        description: link,
-        reply_markup: { inline_keyboard: [[{ text: "🔗 Open", url: link }]] },
-      },
-    ).text(`${msgs.bot.your_link}\n\`${link}\`\n\n${msgs.bot.link_hint}`, {
+    const result = InlineQueryResultBuilder.article(`link:${user.id}`, msgs.menu.receive_messages, {
+      description: link,
+      reply_markup: { inline_keyboard: [[{ text: "🔗 Open", url: link }]] },
+    }).text(`${msgs.bot.your_link}\n\`${link}\`\n\n${msgs.bot.link_hint}`, {
       parse_mode: "MarkdownV2",
     })
 

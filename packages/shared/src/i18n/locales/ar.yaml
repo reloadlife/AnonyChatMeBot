@@ -32,6 +32,7 @@ bot:
   stats: "📊 *إحصائياتك*\n\n📩 مستلم: *{received}*\n📭 غير مقروء: *{unread}*\n📤 مُرسل: *{sent}*"
   admin_no_reports: "✅ لا توجد بلاغات معلقة\\."
   admin_report_item: "🚩 *بلاغ \\#{n}*\nالرسالة: `{content}`"
+  media_type_not_allowed: "❌ *هذا المستخدم لا يقبل هذا النوع من الوسائط\\.*"
 
 onboarding:
   select_locale: "👋 *مرحباً في AnonyChatMe\\!*\nيرجى اختيار لغتك:"
@@ -82,6 +83,17 @@ settings:
   blocked_senders: "🚫 المحظورون \\({n}\\)"
   no_blocked: "📭 *لا يوجد محظورون\\.* لم تحظر أحداً بعد\\."
   unblocked: "✅ تم رفع الحظر."
+  media_types: "🎞 أنواع الوسائط"
+  media_settings_title: "🎞 *إعدادات أنواع الوسائط*\n\nاختر أنواع الوسائط التي تقبل استلامها:"
+  media_photo: "صور"
+  media_video: "فيديو"
+  media_voice: "صوتية"
+  media_audio: "صوت"
+  media_document: "ملفات"
+  media_sticker: "ملصقات"
+  media_animation: "GIF"
+  media_updated: "تم التحديث!"
+  back: "◀ رجوع"
 
 help:
   text: |

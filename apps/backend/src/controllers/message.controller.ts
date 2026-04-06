@@ -8,6 +8,7 @@ import type { MessageJob } from "~/queues/message.queue"
 import { MessageRepository } from "~/repositories/message.repository"
 import { UserRepository } from "~/repositories/user.repository"
 import { serializeMessage } from "~/serializers/message.serializer"
+import { isMediaTypeAllowed } from "~/utils/media-prefs"
 import { checkRateLimit } from "~/utils/rate-limit"
 
 export class MessageController {
@@ -37,15 +38,15 @@ export class MessageController {
     }
 
     // Rate limit: max 5 messages per sender per recipient per minute
-    const { allowed } = await checkRateLimit(
-      this.env.STATE_KV,
-      senderTelegramId,
-      recipientUserId,
-    )
+    const { allowed } = await checkRateLimit(this.env.STATE_KV, senderTelegramId, recipientUserId)
     if (!allowed) throw new Error("RATE_LIMITED")
 
     const recipient = await this.userRepo.findById(recipientUserId)
     if (!recipient) throw new Error("Recipient not found")
+
+    if (media && !isMediaTypeAllowed(recipient, media.type)) {
+      throw new Error("MEDIA_TYPE_NOT_ALLOWED")
+    }
 
     const message = await this.messageRepo.create({
       sender_telegram_id: senderTelegramId,

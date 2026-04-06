@@ -1,6 +1,6 @@
 import { getMessages, type Locale, t } from "@anonychatmebot/shared"
 import type { Bot, Context } from "grammy"
-import { MessageController, type MediaType } from "~/controllers/message.controller"
+import { type MediaType, MessageController } from "~/controllers/message.controller"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
 import { UserRepository } from "~/repositories/user.repository"
@@ -62,6 +62,8 @@ async function trySend(
       )
     } else if (msg === "RATE_LIMITED") {
       await ctx.reply(messages.bot.rate_limited, { parse_mode: "MarkdownV2" })
+    } else if (msg === "MEDIA_TYPE_NOT_ALLOWED") {
+      await ctx.reply(messages.bot.media_type_not_allowed, { parse_mode: "MarkdownV2" })
     } else {
       throw err
     }
@@ -71,8 +73,17 @@ async function trySend(
 
 export function registerMessageHandler(bot: Bot, env: Bindings) {
   // Handle both text and media in active states
-  bot.on(["message:text", "message:photo", "message:video", "message:voice",
-    "message:audio", "message:document", "message:sticker", "message:animation"],
+  bot.on(
+    [
+      "message:text",
+      "message:photo",
+      "message:video",
+      "message:voice",
+      "message:audio",
+      "message:document",
+      "message:sticker",
+      "message:animation",
+    ],
     async (ctx, next) => {
       const from = ctx.from
       const db = createDb(env.DB)
@@ -85,7 +96,7 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
 
       // ── asking_recipient: text only ───────────────────────────────────────
       if (state.name === "asking_recipient") {
-        const text = ctx.message && "text" in ctx.message ? ctx.message.text : ""
+        const text = ctx.message && "text" in ctx.message ? (ctx.message.text ?? "") : ""
         const hash = extractHash(text)
         const recipientId = decodeId(env.LINK_SALT, hash)
 
@@ -126,11 +137,23 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
         }
 
         const media = extractMedia(ctx)
-        const text = ctx.message && "text" in ctx.message ? ctx.message.text : (ctx.message && "caption" in ctx.message ? (ctx.message.caption ?? "") : "")
+        const text =
+          ctx.message && "text" in ctx.message
+            ? (ctx.message.text ?? "")
+            : ctx.message && "caption" in ctx.message
+              ? (ctx.message.caption ?? "")
+              : ""
 
         const ok = await trySend(
-          new MessageController(env), ctx, messages,
-          from.id, sender.id, sender.telegram_id, sender.locale, text, media,
+          new MessageController(env),
+          ctx,
+          messages,
+          from.id,
+          sender.id,
+          sender.telegram_id,
+          sender.locale,
+          text,
+          media,
         )
         if (!ok) return
 
@@ -152,11 +175,23 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
         }
 
         const media = extractMedia(ctx)
-        const text = ctx.message && "text" in ctx.message ? ctx.message.text : (ctx.message && "caption" in ctx.message ? (ctx.message.caption ?? "") : "")
+        const text =
+          ctx.message && "text" in ctx.message
+            ? (ctx.message.text ?? "")
+            : ctx.message && "caption" in ctx.message
+              ? (ctx.message.caption ?? "")
+              : ""
 
         const ok = await trySend(
-          new MessageController(env), ctx, messages,
-          from.id, recipient.id, recipient.telegram_id, recipient.locale, text, media,
+          new MessageController(env),
+          ctx,
+          messages,
+          from.id,
+          recipient.id,
+          recipient.telegram_id,
+          recipient.locale,
+          text,
+          media,
         )
         if (!ok) return
 
@@ -166,5 +201,6 @@ export function registerMessageHandler(bot: Bot, env: Bindings) {
       }
 
       return next()
-    })
+    },
+  )
 }

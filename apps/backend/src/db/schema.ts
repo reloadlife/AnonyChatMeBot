@@ -10,6 +10,8 @@ export const users = sqliteTable("users", {
     .default("en"),
   onboarding_step: integer("onboarding_step").notNull().default(1),
   receiving_messages: integer("receiving_messages", { mode: "boolean" }).notNull().default(true),
+  /** JSON array of allowed media types; null = all types allowed (no restrictions). */
+  allowed_media_types: text("allowed_media_types"),
   created_at: text("created_at")
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
@@ -81,4 +83,3 @@ export type NewMessage = typeof messages.$inferInsert
 
 export type BlockModel = typeof blocks.$inferSelect
 export type ReportModel = typeof reports.$inferSelect
-

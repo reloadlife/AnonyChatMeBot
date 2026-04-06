@@ -27,7 +27,11 @@ const sendMessage = createServerFn({ method: "POST" })
     const res = await fetch(`${API_BASE}/api/messages/send`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-API-Secret": API_SECRET },
-      body: JSON.stringify({ senderTelegramId: 0, recipientUserId: user.id, content: data.content }),
+      body: JSON.stringify({
+        senderTelegramId: 0,
+        recipientUserId: user.id,
+        content: data.content,
+      }),
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Failed to send" }))
@@ -52,7 +56,9 @@ function SendPage() {
     return (
       <main className="page-wrap px-4 pt-20 text-center">
         <p className="text-2xl">🔗 Invalid link</p>
-        <p className="text-[var(--sea-ink-soft)] mt-2">This link is invalid or the user no longer exists.</p>
+        <p className="text-[var(--sea-ink-soft)] mt-2">
+          This link is invalid or the user no longer exists.
+        </p>
       </main>
     )
   }

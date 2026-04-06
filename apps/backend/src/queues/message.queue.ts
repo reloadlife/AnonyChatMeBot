@@ -6,6 +6,7 @@ import type { Bindings } from "~/index"
 import { BlockRepository } from "~/repositories/block.repository"
 import { MessageRepository } from "~/repositories/message.repository"
 import { UserRepository } from "~/repositories/user.repository"
+import { isMediaTypeAllowed } from "~/utils/media-prefs"
 
 export interface MessageJob {
   messageId: number
@@ -48,15 +49,27 @@ export async function handleMessageQueue(
       continue
     }
 
+    // Check if recipient still allows this media type (settings may have changed after queuing)
+    const { mediaType } = msg.body
+    if (mediaType && !isMediaTypeAllowed(recipient, mediaType)) {
+      await messageRepo.markDelivered(messageId)
+      msg.ack()
+      continue
+    }
+
     const messages = getMessages((recipientLocale as Locale) ?? "en")
     const keyboard = new InlineKeyboard().text(messages.actions.view, `view_msg:${messageId}`)
 
     try {
-      const sent = await api.sendMessage(recipientTelegramId, messages.bot.new_message_notification, {
-        parse_mode: "MarkdownV2",
-        reply_markup: keyboard,
-        protect_content: true,
-      })
+      const sent = await api.sendMessage(
+        recipientTelegramId,
+        messages.bot.new_message_notification,
+        {
+          parse_mode: "MarkdownV2",
+          reply_markup: keyboard,
+          protect_content: true,
+        },
+      )
 
       await messageRepo.setNotificationMessageId(messageId, sent.message_id)
       await messageRepo.markDelivered(messageId)

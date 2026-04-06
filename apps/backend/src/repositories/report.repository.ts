@@ -13,11 +13,7 @@ export class ReportRepository {
   }
 
   async listPending(): Promise<ReportModel[]> {
-    return this.db
-      .select()
-      .from(reports)
-      .where(eq(reports.dismissed, false))
-      .all()
+    return this.db.select().from(reports).where(eq(reports.dismissed, false)).all()
   }
 
   async dismiss(id: number): Promise<void> {

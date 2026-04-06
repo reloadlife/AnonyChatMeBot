@@ -32,6 +32,7 @@ bot:
   stats: "📊 *آمار شما*\n\n📩 دریافت‌شده: *{received}*\n📭 خوانده‌نشده: *{unread}*\n📤 ارسال‌شده: *{sent}*"
   admin_no_reports: "✅ گزارش‌ی برای بررسی وجود ندارد\\."
   admin_report_item: "🚩 *گزارش \\#{n}*\nپیام: `{content}`"
+  media_type_not_allowed: "❌ *این کاربر این نوع رسانه را نمی‌پذیرد\\.*"
 
 onboarding:
   select_locale: "👋 *به AnonyChatMe خوش آمدید\\!*\nلطفاً زبان خود را انتخاب کنید:"
@@ -82,6 +83,17 @@ settings:
   blocked_senders: "🚫 مسدودشده‌ها \\({n}\\)"
   no_blocked: "📭 *هیچ فرستنده‌ای مسدود نشده\\.* هنوز کسی را بلاک نکردید\\."
   unblocked: "✅ مسدودیت برداشته شد."
+  media_types: "🎞 نوع رسانه"
+  media_settings_title: "🎞 *تنظیمات نوع رسانه*\n\nانتخاب کنید چه نوع رسانه‌ای دریافت کنید:"
+  media_photo: "تصویر"
+  media_video: "ویدیو"
+  media_voice: "صدا"
+  media_audio: "فایل صوتی"
+  media_document: "فایل"
+  media_sticker: "استیکر"
+  media_animation: "گیف"
+  media_updated: "بروز شد!"
+  back: "◀ بازگشت"
 
 help:
   text: |
