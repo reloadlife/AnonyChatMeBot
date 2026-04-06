@@ -29,6 +29,20 @@
       "when": 1775427139830,
       "tag": "0003_zippy_anthem",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1775467442865,
+      "tag": "0004_slimy_lilith",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1775467718581,
+      "tag": "0005_wonderful_the_santerians",
+      "breakpoints": true
     }
   ]
 }

@@ -14,6 +14,7 @@ export type Bindings = {
   LINK_SALT: string
   ENVIRONMENT: string
   FRONTEND_URL: string
+  ADMIN_TELEGRAM_ID: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -37,5 +38,10 @@ export default {
     const { handleMessageQueue } = await import("~/queues/message.queue")
     // biome-ignore lint/suspicious/noExplicitAny: queue batch is typed at send time
     await handleMessageQueue(batch as any, env)
+  },
+
+  async scheduled(_event: ScheduledEvent, env: Bindings): Promise<void> {
+    const { runCleanup } = await import("~/cron/cleanup")
+    await runCleanup(env)
   },
 }

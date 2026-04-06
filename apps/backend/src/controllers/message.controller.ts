@@ -1,11 +1,14 @@
 export type TooLongError = Error & { max: number }
 
+export type MediaType = "photo" | "video" | "voice" | "audio" | "document" | "sticker" | "animation"
+
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
 import type { MessageJob } from "~/queues/message.queue"
 import { MessageRepository } from "~/repositories/message.repository"
 import { UserRepository } from "~/repositories/user.repository"
 import { serializeMessage } from "~/serializers/message.serializer"
+import { checkRateLimit } from "~/utils/rate-limit"
 
 export class MessageController {
   private readonly messageRepo: MessageRepository
@@ -25,12 +28,21 @@ export class MessageController {
     recipientTelegramId: number,
     recipientLocale: string,
     content: string,
+    media?: { type: MediaType; fileId: string },
   ) {
-    if (content.length > MessageController.MAX_MESSAGE_LENGTH) {
+    if (!media && content.length > MessageController.MAX_MESSAGE_LENGTH) {
       const err = new Error("MESSAGE_TOO_LONG")
-      ;(err as Error & { max: number }).max = MessageController.MAX_MESSAGE_LENGTH
+      ;(err as TooLongError).max = MessageController.MAX_MESSAGE_LENGTH
       throw err
     }
+
+    // Rate limit: max 5 messages per sender per recipient per minute
+    const { allowed } = await checkRateLimit(
+      this.env.STATE_KV,
+      senderTelegramId,
+      recipientUserId,
+    )
+    if (!allowed) throw new Error("RATE_LIMITED")
 
     const recipient = await this.userRepo.findById(recipientUserId)
     if (!recipient) throw new Error("Recipient not found")
@@ -39,6 +51,8 @@ export class MessageController {
       sender_telegram_id: senderTelegramId,
       recipient_user_id: recipientUserId,
       content,
+      media_type: media?.type ?? null,
+      file_id: media?.fileId ?? null,
     })
 
     const job: MessageJob = {
@@ -48,6 +62,8 @@ export class MessageController {
       recipientLocale,
       senderTelegramId,
       content,
+      mediaType: media?.type,
+      fileId: media?.fileId,
     }
     await this.env.MESSAGE_QUEUE.send(job)
 

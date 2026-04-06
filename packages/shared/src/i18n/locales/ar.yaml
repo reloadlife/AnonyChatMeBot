@@ -29,6 +29,9 @@ bot:
   rate_limited: "⏳ *تمهّل\\!* انتظر لحظة قبل إرسال رسالة أخرى\\."
   message_too_long: "❌ *الرسالة طويلة جداً* \\— الحد الأقصى *{max}* حرفاً\\."
   name_invalid: "❌ *اسم غير صالح\\.* يرجى استخدام ما بين 1 و64 حرفاً\\."
+  stats: "📊 *إحصائياتك*\n\n📩 مستلم: *{received}*\n📭 غير مقروء: *{unread}*\n📤 مُرسل: *{sent}*"
+  admin_no_reports: "✅ لا توجد بلاغات معلقة\\."
+  admin_report_item: "🚩 *بلاغ \\#{n}*\nالرسالة: `{content}`"
 
 onboarding:
   select_locale: "👋 *مرحباً في AnonyChatMe\\!*\nيرجى اختيار لغتك:"
@@ -48,6 +51,7 @@ commands:
   settings: "تغيير اللغة والاسم"
   help: "المساعدة والأسئلة الشائعة"
   cancel: "إلغاء الإجراء الحالي"
+  stats: "عرض إحصائيات الرسائل"
 
 inbox:
   prev: "◀ السابق"
@@ -62,6 +66,7 @@ actions:
   view: "📖 عرض الرسالة"
   reply: "↩️ رد"
   block: "🚫 حظر"
+  delete: "🗑 حذف"
   report: "🚩 إبلاغ"
 
 settings:

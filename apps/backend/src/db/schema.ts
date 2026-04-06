@@ -21,8 +21,14 @@ export const messages = sqliteTable("messages", {
   recipient_user_id: integer("recipient_user_id")
     .notNull()
     .references(() => users.id),
-  content: text("content").notNull(),
+  content: text("content").notNull().default(""),
+  // Media support — null means plain text
+  media_type: text("media_type", {
+    enum: ["photo", "video", "voice", "audio", "document", "sticker", "animation"],
+  }),
+  file_id: text("file_id"),
   delivered: integer("delivered", { mode: "boolean" }).notNull().default(false),
+  deleted_at: text("deleted_at"),
   // Telegram message ID of the "you have a new message" notification sent to recipient
   notification_message_id: integer("notification_message_id"),
   read_at: text("read_at"),
@@ -58,6 +64,7 @@ export const reports = sqliteTable(
     reporter_user_id: integer("reporter_user_id")
       .notNull()
       .references(() => users.id),
+    dismissed: integer("dismissed", { mode: "boolean" }).notNull().default(false),
     created_at: text("created_at")
       .notNull()
       .$defaultFn(() => new Date().toISOString()),
@@ -74,3 +81,4 @@ export type NewMessage = typeof messages.$inferInsert
 
 export type BlockModel = typeof blocks.$inferSelect
 export type ReportModel = typeof reports.$inferSelect
+

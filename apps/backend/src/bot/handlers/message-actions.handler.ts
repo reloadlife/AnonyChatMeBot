@@ -1,5 +1,6 @@
-import { escapeMarkdownV2, getMessages, type Locale } from "@anonychatmebot/shared"
+import { escapeMarkdownV2, getMessages, type Locale, t } from "@anonychatmebot/shared"
 import { Api, type Bot, InlineKeyboard } from "grammy"
+import type { MediaType } from "~/controllers/message.controller"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
 import { BlockRepository } from "~/repositories/block.repository"
@@ -12,11 +13,33 @@ function buildMessageKeyboard(messages: ReturnType<typeof getMessages>, messageI
   return new InlineKeyboard()
     .text(messages.actions.reply, `reply:${messageId}`)
     .text(messages.actions.block, `block:${messageId}`)
+    .row()
     .text(messages.actions.report, `report:${messageId}`)
+    .text(messages.actions.delete, `delete_msg:${messageId}`)
+}
+
+/** Send a media message by its stored type + file_id. */
+async function sendMedia(
+  api: Api,
+  chatId: number,
+  mediaType: MediaType,
+  fileId: string,
+  caption: string,
+) {
+  const opts = { protect_content: true, caption: caption || undefined } as const
+  switch (mediaType) {
+    case "photo": return api.sendPhoto(chatId, fileId, opts)
+    case "video": return api.sendVideo(chatId, fileId, opts)
+    case "voice": return api.sendVoice(chatId, fileId, opts)
+    case "audio": return api.sendAudio(chatId, fileId, opts)
+    case "document": return api.sendDocument(chatId, fileId, opts)
+    case "sticker": return api.sendSticker(chatId, fileId, { protect_content: true })
+    case "animation": return api.sendAnimation(chatId, fileId, opts)
+  }
 }
 
 export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
-  // ── View message: callback from notification button ─────────────────────
+  // ── View message ─────────────────────────────────────────────────────────
   bot.callbackQuery(/^view_msg:(\d+)$/, async (ctx) => {
     const messageId = Number(ctx.match[1])
     const db = createDb(env.DB)
@@ -32,15 +55,37 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
       return
     }
 
+    if (message.deleted_at) {
+      await ctx.answerCallbackQuery({ text: "This message was deleted.", show_alert: true })
+      return
+    }
+
     const msgs = getMessages((user.locale as Locale) ?? "en")
+    const notificationMsgId = ctx.callbackQuery.message?.message_id ?? 0
     await ctx.answerCallbackQuery()
 
-    // Show content with action buttons — sent as reply to the notification message
-    await ctx.reply(escapeMarkdownV2(message.content), {
-      parse_mode: "MarkdownV2",
-      reply_markup: buildMessageKeyboard(msgs, messageId),
-      reply_parameters: { message_id: ctx.callbackQuery.message?.message_id ?? 0 },
-    })
+    // Send message content — media or text, always protected
+    if (message.media_type && message.file_id) {
+      await sendMedia(
+        ctx.api,
+        ctx.from.id,
+        message.media_type as MediaType,
+        message.file_id,
+        message.content,
+      )
+      // Send action keyboard separately for media messages
+      await ctx.reply(msgs.actions.reply, {
+        reply_markup: buildMessageKeyboard(msgs, messageId),
+        reply_parameters: { message_id: notificationMsgId },
+      })
+    } else {
+      await ctx.reply(escapeMarkdownV2(message.content), {
+        parse_mode: "MarkdownV2",
+        protect_content: true,
+        reply_markup: buildMessageKeyboard(msgs, messageId),
+        reply_parameters: { message_id: notificationMsgId },
+      })
+    }
 
     // Mark read and notify sender (only once)
     if (!message.read_at) {
@@ -54,12 +99,9 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
         })
       }
     }
-    // Note: notification_message_id is intentionally NOT overwritten here.
-    // It was set by the queue worker to point to the original notification bubble.
-    // The reply flow captures viewMessageId directly from ctx.callbackQuery.message_id.
   })
 
-  // ── Reply button ────────────────────────────────────────────────────────
+  // ── Reply button ──────────────────────────────────────────────────────────
   bot.callbackQuery(/^reply:(\d+)$/, async (ctx) => {
     const messageId = Number(ctx.match[1])
     const db = createDb(env.DB)
@@ -85,13 +127,24 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
     })
 
     await ctx.answerCallbackQuery()
-    await ctx.reply(msgs.bot.reply_prompt, {
-      parse_mode: "MarkdownV2",
-      reply_parameters: { message_id: viewMessageId },
-    })
+
+    // Include a truncated quote of the original message as context
+    const preview = message.media_type
+      ? `[${message.media_type}]`
+      : message.content.length > 80
+        ? `${message.content.slice(0, 80)}…`
+        : message.content
+
+    await ctx.reply(
+      t(msgs.bot.reply_prompt, {}) + `\n\n> _${escapeMarkdownV2(preview)}_`,
+      {
+        parse_mode: "MarkdownV2",
+        reply_parameters: { message_id: viewMessageId },
+      },
+    )
   })
 
-  // ── Block button ────────────────────────────────────────────────────────
+  // ── Block button ──────────────────────────────────────────────────────────
   bot.callbackQuery(/^block:(\d+)$/, async (ctx) => {
     const messageId = Number(ctx.match[1])
     const db = createDb(env.DB)
@@ -108,15 +161,12 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
     }
 
     await blockRepo.block(user.id, message.sender_telegram_id)
-
     const msgs = getMessages((user.locale as Locale) ?? "en")
     await ctx.answerCallbackQuery({ text: msgs.bot.blocked, show_alert: true })
-
-    // Remove the action buttons from the message
     await ctx.editMessageReplyMarkup({ reply_markup: undefined })
   })
 
-  // ── Report button ───────────────────────────────────────────────────────
+  // ── Report button ─────────────────────────────────────────────────────────
   bot.callbackQuery(/^report:(\d+)$/, async (ctx) => {
     const messageId = Number(ctx.match[1])
     const db = createDb(env.DB)
@@ -133,11 +183,29 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
     }
 
     await reportRepo.report(messageId, user.id)
-
     const msgs = getMessages((user.locale as Locale) ?? "en")
     await ctx.answerCallbackQuery({ text: msgs.bot.reported, show_alert: true })
+    await ctx.editMessageReplyMarkup({ reply_markup: undefined })
+  })
 
-    // Remove the action buttons after reporting
+  // ── Delete button ─────────────────────────────────────────────────────────
+  bot.callbackQuery(/^delete_msg:(\d+)$/, async (ctx) => {
+    const messageId = Number(ctx.match[1])
+    const db = createDb(env.DB)
+    const messageRepo = new MessageRepository(db)
+    const userRepo = new UserRepository(db)
+
+    const user = await userRepo.findByTelegramId(ctx.from.id)
+    if (!user) return ctx.answerCallbackQuery()
+
+    const message = await messageRepo.findById(messageId)
+    if (!message || message.recipient_user_id !== user.id) {
+      return ctx.answerCallbackQuery({ text: "Message not found.", show_alert: true })
+    }
+
+    await messageRepo.softDelete(messageId)
+    const msgs = getMessages((user.locale as Locale) ?? "en")
+    await ctx.answerCallbackQuery({ text: msgs.bot.reported.replace("🚩", "🗑"), show_alert: false })
     await ctx.editMessageReplyMarkup({ reply_markup: undefined })
   })
 }

@@ -29,6 +29,9 @@ bot:
   rate_limited: "⏳ *Slow down\\!* Please wait a moment before sending another message\\."
   message_too_long: "❌ *Message too long* \\— max *{max}* characters\\."
   name_invalid: "❌ *Invalid name\\.* Please use between 1 and 64 characters\\."
+  stats: "📊 *Your stats*\n\n📩 Received: *{received}*\n📭 Unread: *{unread}*\n📤 Sent: *{sent}*"
+  admin_no_reports: "✅ No pending reports\\."
+  admin_report_item: "🚩 *Report \\#{n}*\nMessage: `{content}`"
 
 onboarding:
   select_locale: "👋 *Welcome to AnonyChatMe\\!*\nPlease choose your language:"
@@ -48,6 +51,7 @@ commands:
   settings: "Change language and display name"
   help: "Help and FAQ"
   cancel: "Cancel the current action"
+  stats: "Your message statistics"
 
 inbox:
   prev: "◀ Prev"
@@ -63,6 +67,7 @@ actions:
   reply: "↩️ Reply"
   block: "🚫 Block"
   report: "🚩 Report"
+  delete: "🗑 Delete"
 
 settings:
   title: "⚙️ *Settings*"

@@ -1,5 +1,6 @@
 import { getMessages, type Locale } from "@anonychatmebot/shared"
 import { Api, InlineKeyboard } from "grammy"
+import type { MediaType } from "~/controllers/message.controller"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
 import { BlockRepository } from "~/repositories/block.repository"
@@ -13,6 +14,8 @@ export interface MessageJob {
   recipientLocale: string
   senderTelegramId: number
   content: string
+  mediaType?: MediaType
+  fileId?: string
 }
 
 export async function handleMessageQueue(
@@ -29,16 +32,15 @@ export async function handleMessageQueue(
     const { messageId, recipientTelegramId, recipientUserId, recipientLocale, senderTelegramId } =
       msg.body
 
-    // Check if recipient is accepting messages
+    // Check if recipient is still accepting messages
     const recipient = await userRepo.findById(recipientUserId)
     if (!recipient?.receiving_messages) {
-      // Silently drop — sender already got "sent" confirmation
       await messageRepo.markDelivered(messageId)
       msg.ack()
       continue
     }
 
-    // Check if sender is blocked by recipient
+    // Check if sender is blocked
     const isBlocked = await blockRepo.isBlocked(recipientUserId, senderTelegramId)
     if (isBlocked) {
       await messageRepo.markDelivered(messageId)
@@ -47,29 +49,27 @@ export async function handleMessageQueue(
     }
 
     const messages = getMessages((recipientLocale as Locale) ?? "en")
-
-    // Send notification without content — recipient must tap to view (preserves privacy)
     const keyboard = new InlineKeyboard().text(messages.actions.view, `view_msg:${messageId}`)
 
     try {
       const sent = await api.sendMessage(recipientTelegramId, messages.bot.new_message_notification, {
         parse_mode: "MarkdownV2",
         reply_markup: keyboard,
+        protect_content: true,
       })
 
-      // Both writes before ack — if they fail the message retries (idempotent on re-delivery)
       await messageRepo.setNotificationMessageId(messageId, sent.message_id)
       await messageRepo.markDelivered(messageId)
 
       msg.ack()
     } catch (err) {
       const status = (err as { error_code?: number }).error_code
-      // 403 = bot blocked by user, 400 = chat not found — permanent failures, don't retry
+      // Permanent failures (bot blocked / chat not found) — ack to avoid infinite retry
       if (status === 403 || status === 400) {
         await messageRepo.markDelivered(messageId)
         msg.ack()
       }
-      // All other errors (429, 5xx, network) — do NOT ack so the queue retries automatically
+      // Transient failures (429, 5xx) — do NOT ack; queue retries automatically
     }
   }
 }

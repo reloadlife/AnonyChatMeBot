@@ -32,6 +32,10 @@ binding = "STATE_KV"
 id = "fa9e1434485f43d29b952732ac50d8ad"
 preview_id = "1cd2c339719e413a9cf4b473c981ecc3"
 
+# Cron trigger — uncomment once paid plan is enabled
+# [triggers]
+# crons = ["0 3 * * 0"]   # Every Sunday at 03:00 UTC
+
 [[rules]]
 type = "Text"
 globs = ["**/*.yaml"]

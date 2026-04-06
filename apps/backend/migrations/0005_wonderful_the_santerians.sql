@@ -1,0 +1,1 @@
+ALTER TABLE `reports` ADD `dismissed` integer DEFAULT false NOT NULL;

@@ -1,4 +1,5 @@
 import { Bot } from "grammy"
+import { registerAdminCommand } from "~/bot/commands/admin"
 import { registerCancelCommand } from "~/bot/commands/cancel"
 import { registerHelpCommand } from "~/bot/commands/help"
 import { registerInboxCommand } from "~/bot/commands/inbox"
@@ -6,7 +7,9 @@ import { registerLinkCommand } from "~/bot/commands/link"
 import { registerSendCommand } from "~/bot/commands/send"
 import { registerSettingsCommand } from "~/bot/commands/settings"
 import { registerStartCommand } from "~/bot/commands/start"
+import { registerStatsCommand } from "~/bot/commands/stats"
 import { registerFallbackHandler } from "~/bot/handlers/fallback.handler"
+import { registerInlineHandler } from "~/bot/handlers/inline.handler"
 import { registerMessageActionsHandler } from "~/bot/handlers/message-actions.handler"
 import { registerOnboardingHandlers } from "~/bot/handlers/onboarding"
 import type { Bindings } from "~/index"
@@ -27,6 +30,8 @@ function buildBot(token: string, env: Bindings): Bot {
   // Commands — order matters: specific handlers first, fallback always last
   registerStartCommand(bot, env)
   registerCancelCommand(bot, env)
+  registerStatsCommand(bot, env)
+  registerAdminCommand(bot, env)
   registerOnboardingHandlers(bot, env)
   registerLinkCommand(bot, env)
   registerSendCommand(bot, env)
@@ -34,6 +39,7 @@ function buildBot(token: string, env: Bindings): Bot {
   registerSettingsCommand(bot, env)
   registerHelpCommand(bot, env)
   registerMessageActionsHandler(bot, env)
+  registerInlineHandler(bot, env)
   registerMessageHandler(bot, env)
   registerFallbackHandler(bot, env) // must be last
 

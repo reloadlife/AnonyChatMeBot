@@ -1,5 +1,5 @@
-import { MessageController } from "~/controllers/message.controller"
 import { Hono } from "hono"
+import { MessageController } from "~/controllers/message.controller"
 import { BlockRepository } from "~/repositories/block.repository"
 import { MessageRepository } from "~/repositories/message.repository"
 import { UserRepository } from "~/repositories/user.repository"
@@ -27,7 +27,10 @@ messagesRouter.post("/send", async (c) => {
   const content = body.content?.trim()
   if (!content) return c.json({ error: "Message content is required" }, 400)
   if (content.length > MessageController.MAX_MESSAGE_LENGTH) {
-    return c.json({ error: `Message too long (max ${MessageController.MAX_MESSAGE_LENGTH} chars)` }, 400)
+    return c.json(
+      { error: `Message too long (max ${MessageController.MAX_MESSAGE_LENGTH} chars)` },
+      400,
+    )
   }
 
   const db = c.get("db")
@@ -35,7 +38,8 @@ messagesRouter.post("/send", async (c) => {
 
   const recipient = await userRepo.findById(body.recipientUserId)
   if (!recipient) return c.json({ error: "Recipient not found" }, 404)
-  if (!recipient.receiving_messages) return c.json({ error: "Recipient is not accepting messages" }, 403)
+  if (!recipient.receiving_messages)
+    return c.json({ error: "Recipient is not accepting messages" }, 403)
 
   // Prevent self-messaging
   const sender = await userRepo.findByTelegramId(body.senderTelegramId)

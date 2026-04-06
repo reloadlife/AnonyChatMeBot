@@ -39,12 +39,16 @@ export interface I18nMessages {
     rate_limited: string
     message_too_long: string
     name_invalid: string
+    stats: string
+    admin_no_reports: string
+    admin_report_item: string
   }
   actions: {
     view: string
     reply: string
     block: string
     report: string
+    delete: string
   }
   onboarding: {
     select_locale: string
@@ -64,6 +68,7 @@ export interface I18nMessages {
     settings: string
     help: string
     cancel: string
+    stats: string
   }
   inbox: {
     prev: string

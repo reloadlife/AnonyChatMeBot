@@ -24,7 +24,13 @@ export type StateName = BotState["name"]
  * A → B is valid only if B appears in TRANSITIONS[A].
  */
 export const TRANSITIONS: Readonly<Record<StateName, StateName[]>> = {
-  idle: ["onboarding_locale", "onboarding_name", "sending_message", "asking_recipient", "replying_to"],
+  idle: [
+    "onboarding_locale",
+    "onboarding_name",
+    "sending_message",
+    "asking_recipient",
+    "replying_to",
+  ],
   onboarding_locale: ["onboarding_name"],
   onboarding_name: ["idle"],
   asking_recipient: ["sending_message", "idle"],
