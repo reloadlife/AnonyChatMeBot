@@ -15,8 +15,7 @@ export function registerFallbackHandler(bot: Bot, env: Bindings) {
     const user = await new UserRepository(db).findByTelegramId(ctx.from.id)
     const messages = getMessages((user?.locale as Locale) ?? "en")
 
-    await ctx.reply(messages.errors.generic, {
-      parse_mode: "MarkdownV2",
+    await ctx.reply(messages.bot.fallback, {
       reply_markup: user ? buildMainMenuKeyboard(messages) : undefined,
     })
   })

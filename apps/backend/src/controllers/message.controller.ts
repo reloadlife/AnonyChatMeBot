@@ -1,4 +1,5 @@
 export type TooLongError = Error & { max: number }
+export type RateLimitError = Error & { retryAfterSeconds: number }
 
 export type MediaType = "photo" | "video" | "voice" | "audio" | "document" | "sticker" | "animation"
 
@@ -38,8 +39,16 @@ export class MessageController {
     }
 
     // Rate limit: max 5 messages per sender per recipient per minute
-    const { allowed } = await checkRateLimit(this.env.STATE_KV, senderTelegramId, recipientUserId)
-    if (!allowed) throw new Error("RATE_LIMITED")
+    const { allowed, retryAfterSeconds } = await checkRateLimit(
+      this.env.STATE_KV,
+      senderTelegramId,
+      recipientUserId,
+    )
+    if (!allowed) {
+      const err = new Error("RATE_LIMITED") as RateLimitError
+      err.retryAfterSeconds = retryAfterSeconds
+      throw err
+    }
 
     const recipient = await this.userRepo.findById(recipientUserId)
     if (!recipient) throw new Error("Recipient not found")

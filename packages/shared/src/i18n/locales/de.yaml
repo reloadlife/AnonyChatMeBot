@@ -1,42 +1,44 @@
 bot:
-  welcome: "🎉 *Alles bereit, {name}\\!*\nWillkommen bei *AnonyChatMe* \\— deinem anonymen Nachrichtenbot\\."
-  welcome_back: "👋 Willkommen zurück, *{name}*\\!"
-  your_link: "🔗 *Dein anonymer Link:*"
-  link_hint: "Teile diesen Link, damit jeder dir anonyme Nachrichten senden kann\\.\nDeine Identität wird niemals preisgegeben\\."
-  send_message_prompt: "✍️ *Schreibe deine anonyme Nachricht unten:*"
-  message_sent: "✅ *Gesendet\\!* Deine Nachricht wurde anonym zugestellt\\."
-  message_received: "📩 Du hast eine *neue anonyme Nachricht\\!*"
-  no_messages: "📭 *Dein Posteingang ist leer\\.* Noch keine Nachrichten\\."
-  sending_to: "📨 *Bereit zum Senden\\.* Schreibe deine anonyme Nachricht:"
-  ask_recipient: "🔗 Füge den anonymen Link der Person unten ein:"
-  invalid_link: "❌ *Ungültiger Link\\.* Bitte prüfe ihn und versuche es erneut\\."
-  cannot_self_message: "❌ Du kannst dir selbst keine anonyme Nachricht senden\\."
+  welcome: "🎭 *yo, {name} — du bist drin\\!* ✨\nwillkommen bei *AnonyChatMe*\nwo Leute sagen was sie *wirklich* denken 👀"
+  welcome_back: "👋 ayy *{name}* ist zurück\\! was geht 🔥"
+  your_link: "🔗 *dein anonymer Link:*"
+  link_hint: "teil den Link überall — Insta\\-Bio, Twitter, Stories 🔗\njeder der klickt kann dir *100% anonym* schreiben 🤫"
+  send_message_prompt: "✍️ *los, schreib deine Nachricht* 👀\ndie werden nie erfahren dass du es warst"
+  message_sent: "💌 *gesendet \\& versiegelt* 🤫 die werden nie erfahren dass du es warst"
+  message_received: "👀 *oops— jemand hat ein Geheimnis in deinen Posteingang geworfen* 🔥"
+  no_messages: "📭 *noch nichts da\\.\\.\\.* teil deinen Link und schau was passiert 👀"
+  sending_to: "📨 *bereit\\.* schreib deine anonyme Nachricht 👇"
+  ask_recipient: "🔗 füg den anonymen Link hier ein:"
+  invalid_link: "😬 nee der Link stimmt nicht\\. kopier den richtigen und versuch's nochmal"
+  cannot_self_message: "😂 du willst dir selbst schreiben? kennen wir, aber nee"
   inbox_header: "📬 *Posteingang* — Seite {page} von {total}"
   inbox_item: "\\#{n}  {content}\n🕐 {ago}"
-  new_message_notification: "📩 *Neue anonyme Nachricht\\!*\n\nTippe auf *Nachricht lesen* um sie zu öffnen\\."
-  message_read_receipt: "👀 Deine Nachricht wurde *gelesen*\\."
-  reply_prompt: "↩️ *Schreibe deine Antwort* unten:"
-  reply_sent: "✅ *Antwort gesendet\\!*"
+  new_message_notification: "👀 *oops— jemand hat ein Geheimnis in deinen Posteingang geworfen* 🔥\n\ntipp auf *Nachricht lesen* um zu sehen was drinsteht 👇"
+  message_read_receipt: "👀 sie haben deine Nachricht geöffnet\\.\\.\\. 👁️"
+  reply_prompt: "↩️ *schreib deine Antwort* 👇\nimmer noch anonym, keine Sorge 🤫"
+  reply_sent: "💌 *Antwort gesendet\\!* anonym wie immer 🤫"
   # Einfacher Text — für Toast-Benachrichtigungen (ohne parse_mode)
-  blocked: "🚫 Absender blockiert."
-  reported: "🚩 Gemeldet. Danke!"
-  not_accepting_messages: "❌ *Keine Nachrichten\\.* Diese Person hat ihren Posteingang pausiert\\."
+  blocked: "🚫 blockiert. du hörst nichts mehr von denen"
+  reported: "🚩 gemeldet. wir schauen's uns an"
+  deleted: "🗑️ weg. puff. als wär's nie da gewesen"
+  fallback: "🤔 nicht verstanden. drück einen Button oder tipp /help!"
+  not_accepting_messages: "😴 *deren Posteingang ist gerade zu\\.* versuch's später\\!"
   message_not_found: "❌ Nachricht nicht gefunden\\."
-  sender_blocked: "❌ Dieser Nutzer hat dich blockiert\\."
-  cancel: "✅ *Abgebrochen\\.* Was möchtest du tun?"
-  nothing_to_cancel: "🤷 Gerade ist nichts aktiv\\."
+  sender_blocked: "🚫 *diese Person hat dich blockiert\\.*"
+  cancel: "😎 *abgebrochen\\!* was jetzt?"
+  nothing_to_cancel: "😎 alles klar — nix zum Abbrechen\\!"
   inbox_unread: "{n} ungelesen"
-  rate_limited: "⏳ *Langsamer\\!* Bitte warte einen Moment vor der nächsten Nachricht\\."
-  message_too_long: "❌ *Nachricht zu lang* \\— maximal *{max}* Zeichen\\."
-  name_invalid: "❌ *Ungültiger Name\\.* Bitte 1 bis 64 Zeichen verwenden\\."
-  stats: "📊 *Deine Statistik*\n\n📩 Empfangen: *{received}*\n📭 Ungelesen: *{unread}*\n📤 Gesendet: *{sent}*"
-  admin_no_reports: "✅ Keine ausstehenden Meldungen\\."
+  rate_limited: "😮‍💨 easy— versuch's in *{seconds}s* nochmal 😄"
+  message_too_long: "📝 zu viel\\! bleib unter *{max}* Zeichen"
+  name_invalid: "😬 *der Name geht nicht\\.* zwischen 1 und 64 Zeichen bitte"
+  stats: "📊 *dein Vibe\\-Check:*\n\n💌 empfangen: *{received}*\n🔥 ungelesen: *{unread}*\n📤 gesendet: *{sent}*\n\ndu bist schon beliebt ngl 👀"
+  admin_no_reports: "✅ keine Meldungen — alles clean\\!"
   admin_report_item: "🚩 *Meldung \\#{n}*\nNachricht: `{content}`"
-  media_type_not_allowed: "❌ *Dieser Nutzer akzeptiert diesen Medientyp nicht\\.*"
+  media_type_not_allowed: "🚫 *die akzeptieren diesen Medientyp nicht\\.* versuch Text\\!"
 
 onboarding:
-  select_locale: "👋 *Willkommen bei AnonyChatMe\\!*\nBitte wähle deine Sprache:"
-  enter_name: "✏️ *Wie soll ich dich nennen?*\n\nTippe auf deinen Namen oder gib einen anderen ein:"
+  select_locale: "🎭 *yo, willkommen bei AnonyChatMe\\!* ✨\nwähl deine Sprache 🌍"
+  enter_name: "💬 *welchen Namen sollen Leute auf deiner Seite sehen?*\n\ntipp auf deinen Namen oder schreib einen anderen:"
 
 menu:
   receive_messages: "📩 Mein anonymer Link"
@@ -81,10 +83,10 @@ settings:
   receiving_off: "⏸️ Empfang pausiert"
   toggle_receiving: "📩 Empfang ein/aus"
   blocked_senders: "🚫 Blockierte \\({n}\\)"
-  no_blocked: "📭 *Keine blockierten Absender\\.* Du hast niemanden blockiert\\."
-  unblocked: "✅ Entsperrt."
+  no_blocked: "📭 *niemand blockiert\\.* sauberes Karma 😇"
+  unblocked: "✅ entsperrt."
   media_types: "🎞 Medientypen"
-  media_settings_title: "🎞 *Medientyp-Einstellungen*\n\nWähle, welche Medientypen du empfangen möchtest:"
+  media_settings_title: "🎞 *Medien\\-Einstellungen*\n\nwähl welche Medientypen du empfangen willst:"
   media_photo: "Fotos"
   media_video: "Videos"
   media_voice: "Sprachnachrichten"
@@ -92,35 +94,35 @@ settings:
   media_document: "Dateien"
   media_sticker: "Sticker"
   media_animation: "GIFs"
-  media_updated: "Aktualisiert!"
+  media_updated: "aktualisiert!"
   back: "◀ Zurück"
 
 help:
   text: |
-    *❓ Hilfe & FAQ*
+    *❓ Hilfe \\& FAQ*
 
-    *Was ist AnonyChatMe?*
-    Ein Bot für anonyme Nachrichten \\— weder du noch der Absender sehen die Identität des anderen\.
+    *was ist AnonyChatMe?*
+    ein Bot für anonyme Nachrichten — weder du noch der Absender sehen die Identität des anderen\. echt jetzt\.
 
-    *Wie empfange ich Nachrichten?*
-    Tippe auf 📩 *Mein anonymer Link* oder nutze /link\. Teile den Link überall\.
+    *wie empfange ich Nachrichten?*
+    tipp auf 📩 *Mein anonymer Link* oder nutze /link\. teil den Link überall — Insta\\-Bio, Twitter, Stories\.
 
-    *Wie sende ich eine Nachricht?*
-    Tippe auf 📤 *Nachricht senden* oder /send, dann füge den Link der Person ein\.
+    *wie sende ich eine Nachricht?*
+    tipp auf 📤 *Nachricht senden* oder /send, dann füg den Link der Person ein\.
 
-    *Sind Nachrichten wirklich anonym?*
-    Ja\. Die Identität des Absenders wird dem Empfänger niemals preisgegeben, und umgekehrt\.
+    *sind Nachrichten wirklich anonym?*
+    ja\. die Identität des Absenders wird dem Empfänger nie gezeigt, und umgekehrt\. versprochen 🤞
 
-    *Kann ich auf eine erhaltene Nachricht antworten?*
-    Ja\. Öffne die Nachricht und tippe auf ↩️ *Antworten*\. Die Antwort bleibt ebenfalls anonym\.
+    *kann ich auf eine erhaltene Nachricht antworten?*
+    ja\. öffne die Nachricht und tipp auf ↩️ *Antworten*\. die Antwort ist auch anonym\.
 
-    *Wie stoppe ich den Empfang?*
-    Gehe zu ⚙️ *Einstellungen* und deaktiviere den Nachrichtenempfang\.
+    *wie stoppe ich den Empfang?*
+    geh zu ⚙️ *Einstellungen* und deaktiviere den Empfang\.
 
-    *Kann ich Name oder Sprache ändern?*
-    Ja \\— tippe auf ⚙️ *Einstellungen*\.
+    *kann ich Name oder Sprache ändern?*
+    ja — tipp auf ⚙️ *Einstellungen*\.
 
 errors:
-  generic: "❌ *Etwas ist schiefgelaufen\\.* Bitte versuche es erneut\\."
-  not_found: "❌ Nicht gefunden\\."
-  user_not_found: "❌ Dieser Link ist *ungültig* oder der Benutzer existiert nicht mehr\\."
+  generic: "😵 *irgendwas ist kaputt\\.* versuch's gleich nochmal\\!"
+  not_found: "❌ nicht gefunden\\."
+  user_not_found: "🫠 diese Person nicht gefunden\\. vielleicht Account gelöscht?"
