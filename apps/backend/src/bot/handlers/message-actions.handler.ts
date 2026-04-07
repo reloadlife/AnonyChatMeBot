@@ -209,7 +209,7 @@ export function registerMessageActionsHandler(bot: Bot, env: Bindings) {
 
     await messageRepo.softDelete(messageId)
     const msgs = getMessages((user.locale as Locale) ?? "en")
-    await ctx.answerCallbackQuery({ text: msgs.bot.reported.replace("🚩", "🗑"), show_alert: false })
+    await ctx.answerCallbackQuery({ text: msgs.bot.deleted, show_alert: false })
     await ctx.editMessageReplyMarkup({ reply_markup: undefined })
   })
 }

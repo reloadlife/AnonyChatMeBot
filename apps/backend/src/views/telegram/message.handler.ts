@@ -1,6 +1,10 @@
 import { getMessages, type Locale, t } from "@anonychatmebot/shared"
 import type { Bot, Context } from "grammy"
-import { type MediaType, MessageController } from "~/controllers/message.controller"
+import {
+  type MediaType,
+  MessageController,
+  type RateLimitError,
+} from "~/controllers/message.controller"
 import { createDb } from "~/db/index"
 import type { Bindings } from "~/index"
 import { UserRepository } from "~/repositories/user.repository"
@@ -61,7 +65,8 @@ async function trySend(
         { parse_mode: "MarkdownV2" },
       )
     } else if (msg === "RATE_LIMITED") {
-      await ctx.reply(messages.bot.rate_limited, { parse_mode: "MarkdownV2" })
+      const seconds = String((err as RateLimitError).retryAfterSeconds ?? "?")
+      await ctx.reply(t(messages.bot.rate_limited, { seconds }), { parse_mode: "MarkdownV2" })
     } else if (msg === "MEDIA_TYPE_NOT_ALLOWED") {
       await ctx.reply(messages.bot.media_type_not_allowed, { parse_mode: "MarkdownV2" })
     } else {

@@ -30,6 +30,8 @@ export interface I18nMessages {
     reply_sent: string
     blocked: string
     reported: string
+    deleted: string
+    fallback: string
     not_accepting_messages: string
     message_not_found: string
     sender_blocked: string

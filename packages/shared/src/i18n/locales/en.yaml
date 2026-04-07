@@ -1,42 +1,44 @@
 bot:
-  welcome: "🎉 *You're all set, {name}\\!*\nWelcome to *AnonyChatMe* \\— your anonymous messaging bot\\."
-  welcome_back: "👋 Welcome back, *{name}*\\!"
-  your_link: "🔗 *Your anonymous link:*"
-  link_hint: "Share this link so anyone can send you anonymous messages\\.\nYour identity is never revealed\\."
-  send_message_prompt: "✍️ *Type your anonymous message below:*"
-  message_sent: "✅ *Sent\\!* Your message was delivered anonymously\\."
-  message_received: "📩 You have a *new anonymous message\\!*"
-  no_messages: "📭 *Your inbox is empty\\.* No messages yet\\."
-  sending_to: "📨 *Ready to send\\.* Type your anonymous message below:"
-  ask_recipient: "🔗 Paste the person's anonymous link below:"
-  invalid_link: "❌ *Invalid link\\.* Please check it and try again\\."
-  cannot_self_message: "❌ You can't send an anonymous message to yourself\\."
-  inbox_header: "📬 *Inbox* — page {page} of {total}"
+  welcome: "🎭 *yo, {name} — you're in\\!* ✨\nwelcome to *AnonyChatMe*\nwhere people say what they *actually* think 👀"
+  welcome_back: "👋 ayyy *{name}* is back\\! what's good 🔥"
+  your_link: "🔗 *your anonymous link:*"
+  link_hint: "drop this link anywhere — insta bio, twitter, stories 🔗\nanyone who clicks it can message you *100% anonymously* 🤫"
+  send_message_prompt: "✍️ *go ahead, type your message* 👀\nthey'll never know it was you"
+  message_sent: "💌 *sent \\& sealed* 🤫 they'll never know it was you"
+  message_received: "👀 *oop— someone just dropped a secret in your inbox* 🔥"
+  no_messages: "📭 *nothing here yet\\.\\.\\.* share your link and see what happens 👀"
+  sending_to: "📨 *locked in\\.* type your anonymous message below 👇"
+  ask_recipient: "🔗 paste their anonymous link here:"
+  invalid_link: "😬 nah that link's not it\\. copy\\-paste the real one and try again"
+  cannot_self_message: "😂 you trying to message yourself? we've all been there but nah"
+  inbox_header: "📬 *inbox* — page {page} of {total}"
   inbox_item: "\\#{n}  {content}\n🕐 {ago}"
-  new_message_notification: "📩 *New anonymous message\\!*\n\nTap *View message* to read it\\."
-  message_read_receipt: "👀 Your message has been *read*\\."
-  reply_prompt: "↩️ *Type your reply* below:"
-  reply_sent: "✅ *Reply sent\\!*"
+  new_message_notification: "👀 *oop— someone just dropped a secret in your inbox* 🔥\n\ntap *view message* to see what they said 👇"
+  message_read_receipt: "👀 they opened your message\\.\\.\\. 👁️"
+  reply_prompt: "↩️ *type your reply* 👇\nstill anonymous, don't worry 🤫"
+  reply_sent: "💌 *reply sent\\!* anonymous as always 🤫"
   # Plain text — used in answerCallbackQuery toast (no parse_mode)
-  blocked: "🚫 Sender blocked."
-  reported: "🚩 Reported. Thanks!"
-  not_accepting_messages: "❌ *Not accepting messages\\.* This person has paused their inbox\\."
-  message_not_found: "❌ Message not found\\."
-  sender_blocked: "❌ This user has blocked you\\."
-  cancel: "✅ *Cancelled\\.* What would you like to do?"
-  nothing_to_cancel: "🤷 You're not in the middle of anything\\."
+  blocked: "🚫 blocked. you won't hear from them again"
+  reported: "🚩 reported. we'll look into it"
+  deleted: "🗑️ gone. poof. like it never happened"
+  fallback: "🤔 didn't catch that. tap a button or type /help if you're lost!"
+  not_accepting_messages: "😴 *their inbox is closed rn\\.* try again later\\!"
+  message_not_found: "❌ message not found\\."
+  sender_blocked: "🚫 *this person blocked you\\.*"
+  cancel: "😎 *cancelled\\!* what's next?"
+  nothing_to_cancel: "😎 you're all clear — nothing to cancel\\!"
   inbox_unread: "{n} unread"
-  rate_limited: "⏳ *Slow down\\!* Please wait a moment before sending another message\\."
-  message_too_long: "❌ *Message too long* \\— max *{max}* characters\\."
-  name_invalid: "❌ *Invalid name\\.* Please use between 1 and 64 characters\\."
-  stats: "📊 *Your stats*\n\n📩 Received: *{received}*\n📭 Unread: *{unread}*\n📤 Sent: *{sent}*"
-  admin_no_reports: "✅ No pending reports\\."
-  admin_report_item: "🚩 *Report \\#{n}*\nMessage: `{content}`"
-  media_type_not_allowed: "❌ *This user doesn't accept this type of media\\.*"
+  rate_limited: "😮‍💨 chill— try again in *{seconds}s* 😄"
+  message_too_long: "📝 too much to say\\! keep it under *{max}* characters"
+  name_invalid: "😬 *that name won't work\\.* keep it between 1 and 64 characters"
+  stats: "📊 *your vibe check:*\n\n💌 received: *{received}*\n🔥 unread: *{unread}*\n📤 sent: *{sent}*\n\nyou're kinda popular ngl 👀"
+  admin_no_reports: "✅ no pending reports — all clear\\!"
+  admin_report_item: "🚩 *report \\#{n}*\nmessage: `{content}`"
+  media_type_not_allowed: "🚫 *they don't accept this type of media\\.* try sending text instead\\!"
 
 onboarding:
-  select_locale: "👋 *Welcome to AnonyChatMe\\!*\nPlease choose your language:"
-  enter_name: "✏️ *What should I call you?*\n\nTap your name below or type a custom one:"
+  select_locale: "🎭 *yo, welcome to AnonyChatMe\\!* ✨\npick your language 🌍"
+  enter_name: "💬 *what name should people see when they visit your page?*\n\ntap your name below or type a custom one:"
 
 menu:
   receive_messages: "📩 My anonymous link"
@@ -75,16 +77,16 @@ settings:
   change_language: "🌐 Language"
   change_name: "✏️ Display name"
   # Plain text — used in answerCallbackQuery toast
-  name_updated: "✅ Display name updated to {name}!"
-  language_updated: "✅ Language updated!"
+  name_updated: "✅ name updated to {name}!"
+  language_updated: "✅ language updated!"
   receiving_on: "✅ Accepting messages"
   receiving_off: "⏸️ Messages paused"
   toggle_receiving: "📩 Toggle messages"
   blocked_senders: "🚫 Blocked \\({n}\\)"
-  no_blocked: "📭 *No blocked senders\\.* You haven't blocked anyone\\."
-  unblocked: "✅ Unblocked."
+  no_blocked: "📭 *no blocked senders\\.* you haven't blocked anyone\\."
+  unblocked: "✅ unblocked."
   media_types: "🎞 Media types"
-  media_settings_title: "🎞 *Media type settings*\n\nChoose which types of media you accept:"
+  media_settings_title: "🎞 *media type settings*\n\nchoose which types of media you accept:"
   media_photo: "Photos"
   media_video: "Videos"
   media_voice: "Voice"
@@ -93,35 +95,35 @@ settings:
   media_sticker: "Stickers"
   media_animation: "GIFs"
   # Plain text — toast only
-  media_updated: "Updated!"
+  media_updated: "updated!"
   back: "◀ Back"
 
 help:
   text: |
-    *❓ Help & FAQ*
+    *❓ help \\& FAQ*
 
-    *What is AnonyChatMe?*
-    A bot that lets anyone send you anonymous messages — neither of you ever sees the other's identity\.
+    *what is AnonyChatMe?*
+    a bot that lets anyone send you anonymous messages — neither of you ever sees the other's identity\. fr fr\.
 
-    *How do I receive messages?*
-    Tap 📩 *My anonymous link* or use /link to get your personal link\. Share it anywhere \\— social media, bio, wherever\.
+    *how do i receive messages?*
+    tap 📩 *My anonymous link* or use /link to get your personal link\. share it anywhere — insta bio, twitter, stories, wherever\.
 
-    *How do I send a message?*
-    Tap 📤 *Send a message* or use /send, then paste someone's link\. Type your message and it's delivered anonymously\.
+    *how do i send a message?*
+    tap 📤 *Send a message* or use /send, then paste someone's link\. type your message and it's delivered anonymously\.
 
-    *Are messages truly anonymous?*
-    Yes\. The sender's Telegram identity is never revealed to the recipient, and vice versa\.
+    *are messages truly anonymous?*
+    yep\. the sender's identity is never revealed to the recipient, and vice versa\. pinky promise 🤞
 
-    *Can I reply to a message I received?*
-    Yes\. Open the message with 📖 *View message* and tap ↩️ *Reply*\. Your reply is also anonymous\.
+    *can i reply to a message i received?*
+    yes\. open the message with 📖 *View message* and tap ↩️ *Reply*\. your reply is also anonymous\.
 
-    *Can I stop receiving messages?*
-    Yes — go to ⚙️ *Settings* and toggle off message receiving\.
+    *can i stop receiving messages?*
+    yes — go to ⚙️ *Settings* and toggle off message receiving\.
 
-    *Can I change my name or language?*
-    Yes — tap ⚙️ *Settings*\.
+    *can i change my name or language?*
+    yes — tap ⚙️ *Settings*\.
 
 errors:
-  generic: "❌ *Something went wrong\\.* Please try again\\."
-  not_found: "❌ Not found\\."
-  user_not_found: "❌ This link is *invalid* or the user no longer exists\\."
+  generic: "😵 *something broke\\.* try again in a sec\\!"
+  not_found: "❌ not found\\."
+  user_not_found: "🫠 couldn't find that person\\. maybe they deleted their account?"
